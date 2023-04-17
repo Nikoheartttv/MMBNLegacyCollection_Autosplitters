@@ -1,0 +1,148 @@
+ACDC Elementary
+Class 5-A: 55640064
+Class 5-B: 55640320
+Library: 55640576
+2F Hallway: 55640832
+Class 1-A: 55641344
+Class 1-B: 55641600
+AV Room: 55641856
+Infirmary: 55642112
+1F Hallway: 55642368
+Cross Hallway: 55642880
+Storage: 55643136
+Staff Lounge: 55643392
+Staff Lounge Hallway: 55643648
+
+ACDC Town
+ACDC Town: 55640065
+School Gate: 55640321 / 55836929
+Lan's Living Room: 
+Lan's Room: 
+Mayl's Living Room: 
+Dex's Room: 
+Yai's Room: 
+Higsby's Room: 
+ACDC Station: 
+Secret Station: 55840001
+
+Government Complex
+Government Complex: 
+Covernment Complex Station: 
+Waterworks Lobby: 
+SciLab Lobby: 
+Government Complex Hallway: 
+Dad's Lab: 
+Waterworks Office: 
+Waterworks Control Room: 
+Waterworks Pump Room: 
+Water works Water Purification Room: 
+
+Dentown
+Dentown Center: 
+Dentown Station: 
+Dentown Block 1: 
+Dentown Block 2: 
+Dentown Block 3: 
+Dentown Block 4: 
+Miyu's Antiques: 
+Summer School: 
+
+SciLab Basement
+Restaurant Passage: 
+Restaurant: 
+Power Plant Passage: 
+Power Plant: 
+Power Plant Control Room: 
+Generator Room: 
+
+WWW Base
+WWW Base: 55836677
+Wily's Lab: 55836933
+Rocket Hangar: 55837189
+WWW Base Passage 1: 55837445
+WWW Base Passage 2: 55837701
+WWW Base Passage 3: 55837957
+
+Oven Network
+Oven Comp 1: 
+Oven Comp 2: 
+
+Waterworks Network
+Waterworks Comp 1: 
+Waterworks Comp 2: 
+Waterworks Comp 3: 
+Waterworks Comp 4: 
+Waterworks Comp 5: 
+Waterworks Comp 6: 
+
+Traffic Light Network
+Traffic Light Comp 1: 
+Traffic Light Comp 2: 
+Traffic Light Comp 3: 
+Traffic Light Comp 4: 
+Traffic Light Comp 5: 
+
+Power Plant Network
+Power Plant Comp 1: 
+Power Plant Comp 2: 
+Power Plant Comp 3: 
+Power Plant Comp 4: 
+Power Plant Comp 5: 
+
+WWW Network:
+WWW Comp 1: 55836805
+WWW Comp 2: 55837061
+WWW Comp 3: 55837317
+WWW Comp 4: 55837573
+WWW Comp 5: 55837829
+Rocket Comp: 55838085
+
+Ending ACDC Town & Credits: 55836673
+
+ACDC Homepages
+Lan's PC Comp: 
+Mayl's Piano Comp:
+Yai's Portrait Comp: 
+Dex's PC Comp: 
+
+Government Comple Homepages 1
+Dad's PC Comp: 
+Lunch Cart Comp: 
+
+Dentown Homepages
+Antique Comp: 
+
+Government Complex Homepages 2
+Fish Cart Comp:
+
+Miscellaneous Comps
+Doghouse Comp:
+Servbot Comp: 
+New Game Machine Comp: 
+Telephone Comp: 
+Car Comp: 
+Waterworks Vending Machine Comp:
+TV Comp:
+Large Monitor Comp: 
+Control Equipment Comp: 
+Recycled PET Comp: 
+Big Vase Comp: 
+Blackboard Comp:
+
+Internet
+Internet 1: 
+Internet 2:
+Internet 3: 
+Internet 4: 
+Undernet 1: 
+Undernet 2: 
+Undernet 3: 
+Undernet 4: 
+Undernet 5: 
+Undernet 6: 
+Undernet 7: 
+Undernet 8: 
+Undernet 9: 
+Undernet 10: 
+Undernet 11: 
+Undernet 12: 
