@@ -7,6 +7,7 @@
 // get id of results item win? (for All Chips run)
 // re-organise settings of autosplitter with super mods
 // test with speedrun community if WWW Comp 1 skip works
+// add Memos split as some runners use this after doing all the WWW Memos and jacking into Dad's PC
 
 state("MMBN_LC1") 
 {
