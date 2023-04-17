@@ -1,0 +1,207 @@
+ACDC Town
+ACDC Town: 
+ACDC Metro Station: 
+Lan's House: 
+Lan's Room: 
+Mayl's House: 
+Mayl's Room: 
+Dex's Room: 
+Yai's Room: 
+Yai's Bath:
+Room 5A: 50399488
+Yai's Hall:
+
+Marine Harbour
+Marine Harbour: 
+Marine Metro Station:
+Lobby: 
+License Office: 
+Test Room: 
+Dad's Lab: 
+Fake message (crash): 
+Mother Computer Room: 
+
+Okuden Valley
+Okuden Metro Station: 
+Camp Entrance: 
+Camp Road 1: 
+Camp Road 2: 
+Camp: 
+Okuden Dam: 
+
+Den Airport
+Den Airport: 
+Boarding Floor: 
+Airport Metro Station: 
+
+Netopia Airport
+Netopia Airport: 
+Boarding Floor: 
+
+Netopia
+Netopia Park: 
+Netopia Town: 
+Underground / Alley: 
+Hotel Room: 
+Jewelry Shop: 
+Netopia Castle: 
+Banquet Room: 
+Trap Room: 
+Arrow Room: 
+Arch Room: 
+Lower Stairs: 
+Fire Room: 
+Confusion Room: 
+Aboveground / Ground Stairs: 
+Watchtower: 
+
+Airplane
+Crew Room: 
+Economy Class: 
+Business Class: 
+First Class: 
+Cockpit: 
+
+Kotobuki
+Kotobuki: 
+Apartment 1F: 
+Apartment 2F: 
+Apartment 8F: 
+Apartment 25F: 
+Apartment 27F: 
+Apartment 4F: 
+Apartment 9F: 
+Apartment 20F: 
+Apartment 23F: 
+Apartment 24F: 
+Apartment 30F: 
+
+Kotobuki Rooms
+Penthouse: 
+Last Room: 
+Room 021: 
+Room 082: 
+Room 253: 
+Room 271: 
+Room 042: 
+Room 093: 
+Room 201: 
+Room 232: 
+Room 243: 
+
+Gas Comp
+Gas Comp 1 / Gas Water Heater Comp 1: 
+Gas Coomp 2 / Gas Water Heater Comp 2: 
+
+Bomb Comp
+Bomb Comp 1 / Detonator Comp 1: 
+Bomb Comp 2 / Detonator Comp 2: 
+Bomb Comp 3 / Detonator Comp 3: 
+Bomb Comp 4 / Detonator Comp 4: 
+
+Mother Comp
+Mother Comp 1 / Mother Computer Comp 1: 
+Mother Comp 2 / Mother Computer Comp 2: 
+Mother Comp 3 / Mother Computer Comp 3: 
+Mother Comp 4 / Mother Computer Comp 4: 
+Mother Comp 5 / Mother Computer Comp 5: 
+
+Castle Comp
+Castle Comp 1: 
+Castle Comp 2: 
+Castle Comp 3: 
+Castle Comp 4: 
+Castle Comp 5: 
+
+Air Comp
+Air Comp 1 / Airplane Comp 1: 
+Air Comp 2 / Airplane Comp 2: 
+Air Comp 3 / Airplane Comp 3: 
+Air Comp 4 / Airplane Comp 4: 
+Air Comp 5 / Airplane Comp 5: 
+
+Apartment Comp
+Apartment Comp 1: 
+Apartment Comp 2: 
+Apartment Comp 3: 
+Apartment Comp 4: 
+Apartment Comp 5: 
+Gospel Server 1: 
+Gospel Server 2: 
+
+Homepages
+Lan's PC: 
+Mayl's PC: 
+Dex's PC: 
+Yai's PC: 
+Ribitta's Van: 
+Raoul's Radio: 
+Millions' Bag: 
+
+Small Comps 1
+Blackboard Comp: 
+Broken Toy Comp: 
+Doghouse Comp: 
+Control Panel Comp: 
+Piano Comp: 
+Coffee Machine Comp: 
+Portable Game Comp: 
+Telephone Comp: 
+Guardian Comp:
+Gas Stove Comp: 
+Bear Comp: 
+Monitor Comp: 
+Wide Monitor Comp: 
+Flight Board Comp: 
+Gift Shop Comp: 
+Brozne Statue Comp: 
+
+Small Comp 2
+Refrigerator Comp: 
+Goddess Comp: 
+Television Comp: 
+Vending Machine Comp: 
+Autolock Comp: 
+
+Den Area
+Den Area 1: 
+Den Area 2: 
+Den Area 3: 
+Square Entrance / Official Square Entrance: 
+The Square / Official Square: 
+Board Room: 
+
+Koto Area
+Koto Area / Kotobuki Area: 
+KotoSquare Entrance / Kotobuki Square Entrance: 
+KotoSquare 1 / Kotobuki Square 1: 
+KotoSquare 2 / Kotobuki Square 2: 
+Gospel HQ: 
+
+Yumland Area
+Yumland 1 / Yumland Area 1: 
+Yumland 2 / Yumland Area 2: 
+YumSquare Entrance / Yumland Square Entrance: 
+YumSquare / Yumland Square: 
+Treasure Room: 
+
+Netopia Area
+Netopia 1 / Netopia Area 1: 
+Netopia 2 / Netopia Area 2: 
+Netopia 3 / Netopia Area 3: 
+NetSquare Entrance / Netopia Square Entrance: 
+
+Undernet / WWW Area
+Undernet 1: 
+Undernet 2: 
+Undernet 3: 
+Undernet 4: 
+Undernet 5: 
+Undernet 6: 
+Undernet 7: 
+WWW Area 1: 
+WWW Area 2: 
+WWW Area 3: 
+UnderSquare Entrance: 
+UnderSquare: 
+UnderBoard / Under Board Room: 
