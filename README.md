@@ -3,9 +3,10 @@
 ## Repo Contains
 
 WIP Autosplitter
-- current splits on dialogueID's, more research looking into for specific major in-game moments/chapters/days etc
 - BN1 only working atm
-- Timer start tempermental, start from full game start for now
+- Starts on New Game (or Continue) selected, splits on Boss Kills (can be assigned in autosplitter settings)
+- Final split choice in autosplitter settings (for WWW1 skip? if it still works in LC) or after killing LifeVirus
+- Testing Split line bracketed out to potentially remove need for settings choice for final split
 - Requires Just-Ero's UnityASL component: https://github.com/just-ero/asl-help/blob/main/Components/UnityASL.bin
 
 ## Resources
