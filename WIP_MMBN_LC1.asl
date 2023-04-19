@@ -1,17 +1,14 @@
 // Work in Progress Autosplitter by Nikoheart
-// 0.3 - BN1 Mostly Done & BN2 Mostly Done
+// 0.3.1 - BN1 Mostly Done & BN2 Mostly Done
 // requires just-ero's asl-help in LiveSplit/Components
 // https://github.com/just-ero/asl-help/raw/main/lib/asl-help
+// Thanks NMarko for help with Area/SubArea IDs
 
 // 18.04.23
 // ----- Things to do in BN1 
 // get id of results item win? (for All Chips run)
 // re-organise settings of autosplitter with super mods
 // test with speedrun community if WWW Comp 1 skip works
-// add Memos split as some runners use this after doing all the WWW Memos and jacking into Dad's PC
-// ^ edit: will be achievable now with Progress and Key Items
-
-// Thanks NMarko for help with Area/SubArea IDs
 
 // ----- Things to do in BN2 
 // look for addresses.battle_mode / battle_state to use maybe instead of InBattle (can be potentially unreliable)
@@ -19,9 +16,11 @@
 
 state("MMBN_LC1") 
 {
+	// --- Main Menu of Legacy Collection
 	int MainMenuGameChoice : 0x989B384; // BN1 = 0, BN2 = 2, BN3W = 3, BN3B = 4
 	int MainMenuGameSelected : 0x989BA88; // when chosen, value turns 0
 
+	// --- Global Pointers Throughout Games
 	int GameStart : 0xD5D62B0, 0xD4; // revise
 	int DialogueValue: 0x29F34C8, 0x28;
 	int Zenny : 0x29EE840, 0xB8, 0x74;
@@ -33,18 +32,23 @@ state("MMBN_LC1")
 	int KeyItems : 0x29EE840, 0xB8, 0xC0;
 	byte InBattle : 0x29EE840, 0xB8, 0x0; // 0 is hit when selecting "Return to Title Screen" - 28 on ng/continue select
 	
-
 	int EnemyNo1 : 0x29EE840, 0x50, 0x0;
 	int EnemyNo2 : 0x29EE840, 0x50, 0x4;
 	int EnemyNo3 : 0x29EE840, 0x50, 0x8;
 
+	// --- Mega Man Battle Network 2 Pointers
 	int MMBN1_EHP1 : 0x29F21F8, 0x60;
 	int MMBN1_EHP2 : 0x29F21F8, 0x110;
 	int MMBN1_EHP3 : 0x29F21F8, 0x1C0;
 	// int MMBN1_InBattle : 0x29EF7B0, 0x68, 0x28, 0x8;
-	int MMBN1_ResultScreen : 0x29EF620, 0x68, 0x28, 0x8;
-	int MMBN1_ResultScreen : 0x29F21F8, 0x4;
+	// int MMBN1_ResultScreen : 0x29EF620, 0x68, 0x28, 0x8;
+	byte MMBN1_HigsMemo : 0x29EE840, 0xB8, 0xF4;
+	byte MMBN1_LabMemo : 0x29EE840, 0xB8, 0xF5;
+	byte MMBN1_YuriMemo : 0x29EE840, 0xB8, 0xF6;
+	byte MMBN1_PaMemo : 0x29EE840, 0xB8, 0xF7;
+	int MMBN1_FinalSplit : 0x29F21F8, 0x4;
 
+	// --- Mega Man Battle Network 2 Pointers
 	int MMBN2_NGGameStart : 0x29EE840, 0xB8, 0x88;
 	byte MMBN2_EHP1 : 0x29F21F8, 0x1A4;
 	byte MMBN2_EHP2 : 0x29F21F8, 0x264;
@@ -213,7 +217,6 @@ startup
 init
 {
 	vars.BossEncounter = new List<string>();
-	vars.GutsManEncounter = new List<string>();
 	vars.BossDefeated = new List<string>();
 	vars.WWWBaseEntered = new List<string>();
 	vars.LifeVirusDefeated = new List<string>();
@@ -231,9 +234,10 @@ onStart
 
 update
 {
-	// Mega Man Battle Network 1
+	// --- Mega Man Battle Network 1
 	if(settings["BN1Floshell"] && current.EnemyNo1 == 24
 		|| settings["BN1ColdBear"] && current.EnemyNo1 == 41 && current.EnemyNo2 == 42
+		|| settings["BN1GutsMan"] && current.EnemyNo1 == 96
 		|| settings["BN1GutsManV2"] && current.EnemyNo1 == 97
 		|| settings["BN1GutsManV3"] && current.EnemyNo1 == 98
 		|| settings["BN1ProtoMan"] && current.EnemyNo1 == 99
@@ -283,23 +287,17 @@ update
 		vars.BossEncounter.Add("BN1" + current.EnemyNo1.ToString());
 	}
 
-	if(settings["BN1GutsMan"] && current.EnemyNo1 == 96)
-	{
-		vars.GutsManEncounter.Add("BN1" + current.EnemyNo1.ToString());
-	}
-
 	if(settings["BN1LifeVirus"] && current.EnemyNo1 == 147)
 	{
 		vars.LifeVirusDefeated.Add("Defeated");
 	}
 
-	// areaID is now global it seems to put into switch case for BN1
 	if(current.AreaID == 5 && current.SubAreaID == 0)
 	{
 		vars.WWWBaseEntered.Add("Entered");
 	}
 
-	// Mega Man Battle Network 2
+	// --- Mega Man Battle Network 2
 	// Bass Deluxe ID might be incorrect, haven't tested
 	if(settings["BN2AirMan"] && current.EnemyNo1 == 128
 		|| settings["BN2AirManV2"] && current.EnemyNo1 == 129
@@ -357,9 +355,6 @@ update
 		vars.BossEncounter.Add("BN2" + current.EnemyNo1.ToString());
 	}
 
-	//find area ID first - do a visited WWW1 - if can do fire set ID also (only if WWW skip works)
-	//if(settings["BN1NoBN1LifeVirusSplit"])
-
 	if(current.GameStart != old.GameStart) print("Start Value: " + current.GameStart.ToString());
 
 	if(current.AreaID != old.AreaID) print("AreaID: " + current.AreaID.ToString());
@@ -374,38 +369,45 @@ update
 	// if(current.MMBN1_InBattle != old.MMBN1_InBattle) print("MMBN1_InBattle: " + current.MMBN1_InBattle.ToString());
 	// if(current.MMBN1_ResultScreen != old.MMBN1_ResultScreen) print("MMBN1_ResultScreen: " + current.MMBN1_ResultScreen.ToString());
 	// print("\n-----vars.Boss: " + vars.Boss.ToString());
+	if(current.MMBN1_HigsMemo != old.MMBN1_HigsMemo) print("MMBN1_HigsMemo: " + current.MMBN1_HigsMemo.ToString());
+	if(current.MMBN1_PaMemo != old.MMBN1_PaMemo) print("MMBN1_PaMemo: " + current.MMBN1_PaMemo.ToString());
+	if(current.MMBN1_YuriMemo != old.MMBN1_YuriMemo) print("MMBN1_YuriMemo: " + current.MMBN1_YuriMemo.ToString());
 }
 
 split
 {
-	// Mega Man Battle Network 1
+	// --- Mega Man Battle Network 1
 	if (vars.BossEncounter.Contains("BN1" + current.EnemyNo1.ToString()) 
 		&& !vars.BossDefeated.Contains("BN1" + current.EnemyNo1.ToString())
-		&& old.MMBN1_ResultScreen == 2 && current.MMBN1_ResultScreen == 1)
+		&& old.InBattle == 12 && current.InBattle != 12)
 		{
 			vars.BossDefeated.Add("BN1" + current.EnemyNo1.ToString());
 			return true;
 		}
-
-	if (vars.GutsManEncounter.Contains("BN1" + current.EnemyNo1.ToString()) 
-		&& !vars.BossDefeated.Contains("BN1" + current.EnemyNo1.ToString())
-		&& old.InBattle == 12 && current.InBattle == 4)
+	
+	if (current.MMBN1_HigsMemo == 1 && current.MMBN1_LabMemo == 1
+		&& current.MMBN1_YuriMemo == 1 & current.MMBN1_PaMemo == 1
+		&& old.AreaID == 2 && old.SubAreaID == 5
+		&& current.AreaID == 137 && current.SubAreaID == 0)
 		{
-			vars.BossDefeated.Add("BN1" + current.EnemyNo1.ToString());
 			return true;
 		}
 
-	if (settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") && old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
+	if (settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
+		&& vars.WWWBaseEntered.Contains("Entered") 
+		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 	{
 		return true;
 	}
 
-	if (settings["BN1NoLifeVirusSplit"] && old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
+	if (settings["BN1NoLifeVirusSplit"] 
+		&& vars.WWWBaseEntered.Contains("Entered") 
+		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 	{
 		return true;
 	}
 
-	// Mega Man Battle Network 2
+	// --- Mega Man Battle Network 2
 	// current.AreaID is not 133 for all other bosses as to not split in Boss Rushes
 	if (current.AreaID != 133 && vars.BossEncounter.Contains("BN2" + current.EnemyNo1.ToString()) 
 		&& !vars.BossDefeated.Contains("BN2" + current.EnemyNo1.ToString())
@@ -483,7 +485,6 @@ onSplit
 onReset
 {
 	vars.BossEncounter.Clear();
-	vars.GutsManEncounter.Clear();
 	vars.BossDefeated.Clear();
 	vars.WWWBaseEntered.Clear();
 	vars.LifeVirusDefeated.Clear();
