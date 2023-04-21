@@ -451,7 +451,7 @@ update
 			// BN1 = 0, BN2 = 2, BN3W = 3, BN3B = 4
 			switch ( (byte) current.LC1_GameChoice ) 
 			{
-				case 1:
+				case 0:
 					{
 					// --- Mega Man Battle Network 1
 					// - Logging
@@ -460,7 +460,8 @@ update
 					if(settings["BN1YuriMemoLog"] && current.MMBN1_YuriMemo != old.MMBN1_YuriMemo) print("MMBN1_YuriMemo: " + current.MMBN1_YuriMemo.ToString());
 					if(settings["BN1PaMemoLog"] && current.MMBN1_PaMemo != old.MMBN1_PaMemo) print("MMBN1_PaMemo: " + current.MMBN1_PaMemo.ToString());
 					// - Main Splits
-					if(settings["0Floshell"] && current.LC1_ENo1 == 24
+					if((old.LC1_ENo1 != current.LC1_ENo1) && 
+						(settings["0Floshell"] && current.LC1_ENo1 == 24
 						|| settings["0ColdBear"] && current.LC1_ENo1 == 41 && current.LC1_ENo2 == 42
 						|| settings["0GutsMan"] && current.LC1_ENo1 == 96
 						|| settings["0GutsManV2"] && current.LC1_ENo1 == 97
@@ -507,7 +508,7 @@ update
 						|| settings["0MagicMan"] && current.LC1_ENo1 == 141
 						|| settings["0MagicManV2"] && current.LC1_ENo1 == 142
 						|| settings["0MagicManV3"] && current.LC1_ENo1 == 143
-						|| settings["0Bass"] && current.LC1_ENo1 == 144)
+						|| settings["0Bass"] && current.LC1_ENo1 == 144))
 						{
 							vars.BossEncounter.Add("0" + current.LC1_ENo1.ToString());
 						}
@@ -526,7 +527,8 @@ update
 					{
 					// --- Mega Man Battle Network 2
 					// Bass Deluxe ID might be incorrect, haven't tested
-					if(settings["2AirMan"] && current.LC1_ENo1 == 128
+					if((old.LC1_ENo1 != current.LC1_ENo1) && 
+						(settings["2AirMan"] && current.LC1_ENo1 == 128
 						|| settings["2AirManV2"] && current.LC1_ENo1 == 129
 						|| settings["2AirManV3"] && current.LC1_ENo1 == 130
 						|| settings["2QuickMan"] && current.LC1_ENo1 == 131
@@ -577,7 +579,7 @@ update
 						|| settings["2PharaohMan"] && current.LC1_ENo1 == 179
 						|| settings["2PharaohManV2"] && current.LC1_ENo1 == 180
 						|| settings["2PharaohManV3"] && current.LC1_ENo1 == 181
-						|| settings["2BassDeluxe"] && current.LC1_ENo1 == 184)
+						|| settings["2BassDeluxe"] && current.LC1_ENo1 == 184))
 						{
 							vars.BossEncounter.Add("2" + current.LC1_ENo1.ToString());
 						}
@@ -586,7 +588,8 @@ update
 				case 3: case 4:
 				{
 					// Complete all of BN3B and BN3W associated bosses
-					if (settings[current.LC1_GameChoice.ToString() + "FlashMan"] && current.LC1_ENo1 == 168
+					if ((old.LC1_ENo1 != current.LC1_ENo1) && 
+						(settings[current.LC1_GameChoice.ToString() + "FlashMan"] && current.LC1_ENo1 == 168
 						// || settings[current.LC1_GameChoice.ToString() + "FlashManAlpha"] && current.LC1_ENo1 == 169
 						// || settings[current.LC1_GameChoice.ToString() + "FlashManBeta"] && current.LC1_ENo1 == 170
 						// || settings[current.LC1_GameChoice.ToString() + "FlashManOmega"] && current.LC1_ENo1 == 171
@@ -658,15 +661,9 @@ update
 						// || settings[current.LC1_GameChoice.ToString() + "SerenadeOmega"] && current.LC1_ENo1 == 239
 						|| settings[current.LC1_GameChoice.ToString() + "Bass"] && current.LC1_ENo1 == 241
 						|| settings[current.LC1_GameChoice.ToString() + "BassGS"] && current.LC1_ENo1 == 242
-						|| settings[current.LC1_GameChoice.ToString() + "BassOmega"] && current.LC1_ENo1 == 243)
+						|| settings[current.LC1_GameChoice.ToString() + "BassOmega"] && current.LC1_ENo1 == 243))
 						{
 							vars.BossEncounter.Add(current.LC1_GameChoice.ToString() + current.LC1_ENo1.ToString());
-						}
-
-					if(current.LC1_GameChoice >= 3 && 
-						(settings["0Floshell"] && current.LC1_ENo1 == 24))
-						{
-							vars.BossEncounter.Add("0" + current.LC1_ENo1.ToString());
 						}
 					break;
 				}
