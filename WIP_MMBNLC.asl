@@ -88,7 +88,7 @@ state("MMBN_LC2")
 	byte MMBN4_ENo3HP : 0x1169D9E6, 0x90C;
 	byte MMBN4_HP : 0x1169D9E6, 0x684;
 	// Progress hard to find - if absolutely needed, more delving into ram_offset
-	// Zenny also affected by RAM_Offset
+	// Battle_Paused & Zenny also affected by RAM_Offset
 	// --- https://github.com/TeamBattleNet/Scripts/blob/dea3a2d44963007c8b2a1e1bba3fe5f05dda9829/HUD/BN4/RAM.lua#L12-L28
 	
 	// --- Mega Man Battle Network 5 Pointers
@@ -138,7 +138,7 @@ startup
 	settings.Add("Vol1GameSelected", false, "Game Selected");
 	settings.Add("Vol1GameState", false, "Game State");
 	settings.Add("Vol1AreaID", false, "Area ID");
-	settings.Add("Vol1SubAreaID", false, " Sub Area ID");
+	settings.Add("Vol1SubAreaID", false, "Sub Area ID");
 	settings.Add("Vol1ENo1", false, "Enemy Number 1 ID");
 	settings.Add("Vol1ENo2", false, "Enemy Number 2 ID");
 	settings.Add("Vol1ENo3", false, "Enemy Number 3 ID");
@@ -834,13 +834,19 @@ split
 		}
 
 	// Mega Man Battle Network 3 White & Blue
-	if (vars.BossEncounter.Contains("3" + current.LC1_ENo1.ToString() || "4" + current.LC1_ENo1.ToString()) 
-		&& !vars.BossDefeated.Contains("3" + current.LC1_ENo1.ToString() || "4" + current.LC1_ENo1.ToString())
+	if ((vars.BossEncounter.Contains("3" + current.LC1_ENo1.ToString()) || vars.BossEncounter.Contains("4" + current.LC1_ENo1.ToString()))
+		&& (!vars.BossDefeated.Contains("3" + current.LC1_ENo1.ToString()) || !vars.BossDefeated.Contains("4" + current.LC1_ENo1.ToString()))
 		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
 		{
 			vars.BossDefeated.Add(current.LC1_GameChoice.ToString() + current.LC1_ENo1.ToString());
 			return true;
 		}
+
+	if (settings[current.LC1_GameChoice.ToString() + "N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
+	{
+		return true;
+	}
+		// || settings[current.LC1_GameChoice.ToString() + "N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3
 }
 
 onSplit
