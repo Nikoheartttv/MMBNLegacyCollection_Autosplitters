@@ -77,12 +77,16 @@ state("MMBN_LC2")
 	byte LC2_GameSelected : 0xAC14688; // when chosen, value turns 0
 	
 	// --- Mega Man Battle Network 4
+	byte MMBN4_GameState : 0x03D617C8, 0xF52;
 	byte MMBN4_AreaID : 0x3D53B28, 0x158;
-	byte MMBN4_SubAreaID : 0x3D53B28, 0x5C;
-	// --- THIS IS GOING TO NEED A LOT OF SERIOUS WORK
-	// --- BN4 moves everything around a bit each screen transition
-	// --- How are we going to capture this...
-	// --- watchers? ram_offset?
+	byte MMBN4_SubAreaID : 0x3D53B28, 0x160;
+	byte MMBN4_ENo1 : 0x142CC291, 0xB4F;
+	byte MMBN4_ENo1HP : 0x1169D9E6, 0x75C;
+	byte MMBN4_ENo2 : 0x142CC291, 0xB53;
+	byte MMBN4_ENo2HP : 0x1169D9E6, 0x834;
+	byte MMBN4_ENo3 : 0x142CC291, 0xB57;
+	byte MMBN4_ENo3HP : 0x1169D9E6, 0x90C;
+	// Progress hard to find - if absolutely needed, more delving into ram_offset
 	// --- https://github.com/TeamBattleNet/Scripts/blob/dea3a2d44963007c8b2a1e1bba3fe5f05dda9829/HUD/BN4/RAM.lua#L12-L28
 	
 	// --- Mega Man Battle Network 5 Pointers
