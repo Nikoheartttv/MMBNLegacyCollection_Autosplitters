@@ -86,7 +86,9 @@ state("MMBN_LC2")
 	byte MMBN4_ENo2HP : 0x1169D9E6, 0x834;
 	byte MMBN4_ENo3 : 0x142CC291, 0xB57;
 	byte MMBN4_ENo3HP : 0x1169D9E6, 0x90C;
+	byte MMBN4_HP : 0x1169D9E6, 0x684;
 	// Progress hard to find - if absolutely needed, more delving into ram_offset
+	// Zenny also affected by RAM_Offset
 	// --- https://github.com/TeamBattleNet/Scripts/blob/dea3a2d44963007c8b2a1e1bba3fe5f05dda9829/HUD/BN4/RAM.lua#L12-L28
 	
 	// --- Mega Man Battle Network 5 Pointers
