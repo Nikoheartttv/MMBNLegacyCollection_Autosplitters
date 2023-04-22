@@ -119,7 +119,7 @@ state("MMBN_LC2")
 
 startup
 {
-	Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
+	// Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
     
 	settings.Add("Vol1", true, "Legacy Collection 1");
 	settings.CurrentDefaultParent = "Vol1";
@@ -681,6 +681,7 @@ update
 		}
 		case "MMBN_LC2":
 			{
+				if(current.LC2_GameChoice != old.LC2_GameChoice) print("LC2_GameChoice: " + current.LC2_GameChoice.ToString());
 				// BN4RS - 5/BM - 6,  BN5TP - 7/TC - 8, BN6CG - 9/CF - 10
 				vars.LC2GC = current.LC2_GameChoice;
 				switch ( (byte) vars.LC2GC )
