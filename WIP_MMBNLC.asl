@@ -77,6 +77,8 @@ state("MMBN_LC2")
 	byte LC2_GameSelected : 0xAC14688; // when chosen, value turns 0
 	
 	// --- Mega Man Battle Network 4
+	byte MMBN4_AreaID : 0x3D53B28, 0x158;
+	byte MMBN4_SubAreaID : 0x3D53B28, 0x5C;
 	// --- THIS IS GOING TO NEED A LOT OF SERIOUS WORK
 	// --- BN4 moves everything around a bit each screen transition
 	// --- How are we going to capture this...
