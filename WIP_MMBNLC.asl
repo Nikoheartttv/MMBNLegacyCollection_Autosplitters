@@ -4,9 +4,8 @@
 // https://github.com/just-ero/asl-help/raw/main/lib/asl-help
 // Thanks NMarko for help with Area/SubArea ID
 
-// 21.04.23
-// Both games can be run from this single autosplitter
-// Big switch case added to commensate settings between both volumes
+// 23.04.22
+// BN1/3 autosplitters which uphold current Any%'s on SR.C
 // Major testing needed
 
 // ----- Things to do in BN1 
@@ -18,8 +17,8 @@
 // look for addresses.battle_mode / battle_state to use maybe instead of InBattle (can be potentially unreliable)
 // BN2 SSS Licence Exam - PlanetMan/Bass to test and post-game credits screen (the congratulations one)
 
-// ----- Things to do in BW3
-// Does Legacy Collection do V2/V3 or does it cater to Alpha, Beta, Omega?
+// ----- Things to do in BN3
+// Double check what Japanese versions of Omega are represented as - V4 or SP?
 
 // ----- BN4
 // research how to work around RAM offsetting
