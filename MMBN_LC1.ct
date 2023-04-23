@@ -2,32 +2,392 @@
 <CheatTable CheatEngineTableVersion="42">
   <CheatEntries>
     <CheatEntry>
-      <ID>11888</ID>
-      <Description>"LC1GameChoice"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>MMBN_LC1.exe+989B384</Address>
+      <ID>1469</ID>
+      <Description>"CompactMode"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+LuaCall(function cycleFullCompact(sender,force) local state = not(compactmenuitem.Caption == 'Compact View Mode'); if force~=nil then state = not force end; compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'; getMainForm().Splitter1.Visible = state; getMainForm().Panel4.Visible    = state; getMainForm().Panel5.Visible    = state; end; function addCompactMenu() if compactmenualreadyexists then return end; local parent = getMainForm().Menu.Items; compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem); compactmenuitem.Caption = 'Compact View Mode'; compactmenuitem.OnClick = cycleFullCompact; compactmenualreadyexists = 'yes'; end; addCompactMenu(); cycleFullCompact(nil,true))
+
+[DISABLE]
+LuaCall(cycleFullCompact(nil,false))
+</AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>11889</ID>
-      <Description>"LC1GameSelected"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>MMBN_LC1.exe+989BA88</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>1470</ID>
-      <Description>"Megaman Battle Network 1"</Description>
-      <Options moHideChildren="1" moManualExpandCollapse="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
-      <Color>FFFF00</Color>
+      <ID>11819</ID>
+      <Description>"Modifiers"</Description>
+      <Options moHideChildren="1"/>
+      <Color>0000FF</Color>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
         <CheatEntry>
-          <ID>11840</ID>
+          <ID>16</ID>
+          <Description>"Give All Chips"</Description>
+          <Color>0000FF</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : MMBN_LC1.exe
+  Version: 
+  Date   : 2023-04-14
+  Author : zachw
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(Chip,MMBN_LC1.exe,0F B6 14 01 33 C9 85 D2 89 57) // should be unique
+alloc(newmem,$1000,Chip)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rcx+rax],#3
+  xor ecx,ecx
+  jmp return
+
+Chip:
+  jmp newmem
+  nop
+return:
+registersymbol(Chip)
+
+[DISABLE]
+
+Chip:
+  db 0F B6 14 01 33 C9
+
+unregistersymbol(Chip)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: MMBN_LC1.exe+151581
+
+MMBN_LC1.exe+15155D: EB 08              - jmp MMBN_LC1.exe+151567
+MMBN_LC1.exe+15155F: 83 F8 41           - cmp eax,41
+MMBN_LC1.exe+151562: 75 09              - jne MMBN_LC1.exe+15156D
+MMBN_LC1.exe+151564: 83 FA 12           - cmp edx,12
+MMBN_LC1.exe+151567: 0F 84 18 0E 00 00  - je MMBN_LC1.exe+152385
+MMBN_LC1.exe+15156D: 8B 4F 18           - mov ecx,[rdi+18]
+MMBN_LC1.exe+151570: 48 8D 47 4C        - lea rax,[rdi+4C]
+MMBN_LC1.exe+151574: 48 83 E0 C0        - and rax,-40
+MMBN_LC1.exe+151578: 48 89 44 24 60     - mov [rsp+60],rax
+MMBN_LC1.exe+15157D: 48 8B 40 08        - mov rax,[rax+08]
+// ---------- INJECTING HERE ----------
+MMBN_LC1.exe+151581: 0F B6 14 01        - movzx edx,byte ptr [rcx+rax]
+// ---------- DONE INJECTING  ----------
+MMBN_LC1.exe+151585: 33 C9              - xor ecx,ecx
+MMBN_LC1.exe+151587: 85 D2              - test edx,edx
+MMBN_LC1.exe+151589: 89 57 0C           - mov [rdi+0C],edx
+MMBN_LC1.exe+15158C: BA 04 00 00 00     - mov edx,00000004
+MMBN_LC1.exe+151591: 8B C1              - mov eax,ecx
+MMBN_LC1.exe+151593: 0F 44 C2           - cmove eax,edx
+MMBN_LC1.exe+151596: 89 03              - mov [rbx],eax
+MMBN_LC1.exe+151598: C1 E8 02           - shr eax,02
+MMBN_LC1.exe+15159B: 84 C0              - test al,al
+MMBN_LC1.exe+15159D: 0F 85 DE 0D 00 00  - jne MMBN_LC1.exe+152381
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>10864</ID>
+          <Description>"Custom Gauge Pointer"</Description>
+          <Options moHideChildren="1"/>
+          <Color>0000FF</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : MMBN_LC1.exe
+  Version: 
+  Date   : 2023-04-15
+  Author : zachw
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(Custom_Scan,MMBN_LC1.exe,0F B7 0C 01 89 0F 8B CE 8B) // should be unique
+alloc(newmem,$1000,Custom_Scan)
+globalalloc(CustomScan,4)
+label(code)
+label(return)
+
+newmem:
+push rax
+lea rax,[rcx+rax]
+mov [CustomScan],rax
+pop rax
+code:
+  movzx ecx,word ptr [rcx+rax]
+  mov [rdi],ecx
+  jmp return
+
+Custom_Scan:
+  jmp newmem
+  nop
+return:
+registersymbol(Custom_Scan)
+
+[DISABLE]
+
+Custom_Scan:
+  db 0F B7 0C 01 89 0F
+
+unregistersymbol(Custom_Scan)
+dealloc(newmem)
+dealloc(CustomScan)
+{
+// ORIGINAL CODE - INJECTION POINT: MMBN_LC1.exe+46FB60
+
+MMBN_LC1.exe+46FB39: 83 C1 0C                 - add ecx,0C
+MMBN_LC1.exe+46FB3C: 48 83 E3 C0              - and rbx,-40
+MMBN_LC1.exe+46FB40: 33 F6                    - xor esi,esi
+MMBN_LC1.exe+46FB42: 41 BE 04 00 00 00        - mov r14d,00000004
+MMBN_LC1.exe+46FB48: 44 89 B4 24 D0 00 00 00  - mov [rsp+000000D0],r14d
+MMBN_LC1.exe+46FB50: 48 8B 43 08              - mov rax,[rbx+08]
+MMBN_LC1.exe+46FB54: 8B 04 01                 - mov eax,[rcx+rax]
+MMBN_LC1.exe+46FB57: 89 07                    - mov [rdi],eax
+MMBN_LC1.exe+46FB59: 8D 48 3E                 - lea ecx,[rax+3E]
+MMBN_LC1.exe+46FB5C: 48 8B 43 08              - mov rax,[rbx+08]
+// ---------- INJECTING HERE ----------
+MMBN_LC1.exe+46FB60: 0F B7 0C 01              - movzx ecx,word ptr [rcx+rax]
+// ---------- DONE INJECTING  ----------
+MMBN_LC1.exe+46FB64: 89 0F                    - mov [rdi],ecx
+MMBN_LC1.exe+46FB66: 8B CE                    - mov ecx,esi
+MMBN_LC1.exe+46FB68: 8B 07                    - mov eax,[rdi]
+MMBN_LC1.exe+46FB6A: 85 C0                    - test eax,eax
+MMBN_LC1.exe+46FB6C: C7 47 18 23 A2 00 00     - mov [rdi+18],0000A223
+MMBN_LC1.exe+46FB73: 41 0F 44 CE              - cmove ecx,r14d
+MMBN_LC1.exe+46FB77: C7 47 1C 1B A2 00 00     - mov [rdi+1C],0000A21B
+MMBN_LC1.exe+46FB7E: C1 E8 1F                 - shr eax,1F
+MMBN_LC1.exe+46FB81: 0B C8                    - or ecx,eax
+MMBN_LC1.exe+46FB83: 83 C9 02                 - or ecx,02
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>10865</ID>
+              <Description>"Select Drop Down Then Freeze"</Description>
+              <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">16384:Gauge Full
+</DropDownList>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>2 Bytes</VariableType>
+              <Address>CustomScan</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>10867</ID>
+          <Description>"Total Chips In Battle"</Description>
+          <Options moHideChildren="1"/>
+          <Color>0000FF</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : MMBN_LC1.exe
+  Version: 
+  Date   : 2023-04-15
+  Author : zachw
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(CB_Scan,MMBN_LC1.exe,44 0F B6 04 01 48 8B CF 44 89 07 8B 57 04 E8 79) // should be unique
+alloc(newmem,$1000,CB_Scan)
+globalalloc(CBScan,4)
+label(code)
+label(return)
+
+newmem:
+push rax
+lea rax,[rcx+rax]
+mov [CBScan],rax
+pop rax
+code:
+  movzx r8d,byte ptr [rcx+rax]
+  jmp return
+
+CB_Scan:
+  jmp newmem
+return:
+registersymbol(CB_Scan)
+
+[DISABLE]
+
+CB_Scan:
+  db 44 0F B6 04 01
+
+unregistersymbol(CB_Scan)
+dealloc(newmem)
+dealloc(CBScan)
+{
+// ORIGINAL CODE - INJECTION POINT: MMBN_LC1.exe+235724
+
+MMBN_LC1.exe+2356FD: 8B 4F 1C                 - mov ecx,[rdi+1C]
+MMBN_LC1.exe+235700: 48 8D 57 5C              - lea rdx,[rdi+5C]
+MMBN_LC1.exe+235704: 83 C1 0C                 - add ecx,0C
+MMBN_LC1.exe+235707: 48 83 E2 C0              - and rdx,-40
+MMBN_LC1.exe+23570B: 48 8B 42 08              - mov rax,[rdx+08]
+MMBN_LC1.exe+23570F: 8B 04 01                 - mov eax,[rcx+rax]
+MMBN_LC1.exe+235712: 89 47 1C                 - mov [rdi+1C],eax
+MMBN_LC1.exe+235715: 8D 48 10                 - lea ecx,[rax+10]
+MMBN_LC1.exe+235718: 48 8B 84 24 80 00 00 00  - mov rax,[rsp+00000080]
+MMBN_LC1.exe+235720: 48 8B 40 08              - mov rax,[rax+08]
+// ---------- INJECTING HERE ----------
+MMBN_LC1.exe+235724: 44 0F B6 04 01           - movzx r8d,byte ptr [rcx+rax]
+// ---------- DONE INJECTING  ----------
+MMBN_LC1.exe+235729: 48 8B CF                 - mov rcx,rdi
+MMBN_LC1.exe+23572C: 44 89 07                 - mov [rdi],r8d
+MMBN_LC1.exe+23572F: 8B 57 04                 - mov edx,[rdi+04]
+MMBN_LC1.exe+235732: E8 79 47 E0 FF           - call MMBN_LC1.exe+39EB0
+MMBN_LC1.exe+235737: F6 47 40 01              - test byte ptr [rdi+40],01
+MMBN_LC1.exe+23573B: 0F 84 9B 00 00 00        - je MMBN_LC1.exe+2357DC
+MMBN_LC1.exe+235741: 8B 4F 18                 - mov ecx,[rdi+18]
+MMBN_LC1.exe+235744: 8D 51 FF                 - lea edx,[rcx-01]
+MMBN_LC1.exe+235747: 44 8D 41 FF              - lea r8d,[rcx-01]
+MMBN_LC1.exe+23574B: 8B C2                    - mov eax,edx
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>10868</ID>
+              <Description>"Select Drop Down Then Freeze"</Description>
+              <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">15:Max
+</DropDownList>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>CBScan</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>10870</ID>
+          <Description>"Infinite Health"</Description>
+          <Color>0000FF</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : MMBN_LC1.exe
+  Version: 
+  Date   : 2023-04-15
+  Author : zachw
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(Health,MMBN_LC1.exe,0F B7 0C 01 89 0F 41 8B 0E) // should be unique
+alloc(newmem,$1000,Health)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rcx+rax],#999
+  mov [rdi],ecx
+  jmp return
+
+Health:
+  jmp newmem
+  nop
+return:
+registersymbol(Health)
+
+[DISABLE]
+
+Health:
+  db 0F B7 0C 01 89 0F
+
+unregistersymbol(Health)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: MMBN_LC1.exe+23A4A3
+
+MMBN_LC1.exe+23A483: 8B 04 01        - mov eax,[rcx+rax]
+MMBN_LC1.exe+23A486: 41 89 06        - mov [r14],eax
+MMBN_LC1.exe+23A489: 8D 48 40        - lea ecx,[rax+40]
+MMBN_LC1.exe+23A48C: 48 8B 42 08     - mov rax,[rdx+08]
+MMBN_LC1.exe+23A490: 8D 57 04        - lea edx,[rdi+04]
+MMBN_LC1.exe+23A493: 83 E2 3C        - and edx,3C
+MMBN_LC1.exe+23A496: 8B 04 01        - mov eax,[rcx+rax]
+MMBN_LC1.exe+23A499: 41 89 06        - mov [r14],eax
+MMBN_LC1.exe+23A49C: 8D 48 20        - lea ecx,[rax+20]
+MMBN_LC1.exe+23A49F: 49 8B 47 08     - mov rax,[r15+08]
+// ---------- INJECTING HERE ----------
+MMBN_LC1.exe+23A4A3: 0F B7 0C 01     - movzx ecx,word ptr [rcx+rax]
+// ---------- DONE INJECTING  ----------
+MMBN_LC1.exe+23A4A7: 89 0F           - mov [rdi],ecx
+MMBN_LC1.exe+23A4A9: 41 8B 0E        - mov ecx,[r14]
+MMBN_LC1.exe+23A4AC: 49 8B 44 24 08  - mov rax,[r12+08]
+MMBN_LC1.exe+23A4B1: 83 C1 22        - add ecx,22
+MMBN_LC1.exe+23A4B4: 0F B7 0C 01     - movzx ecx,word ptr [rcx+rax]
+MMBN_LC1.exe+23A4B8: 8B C3           - mov eax,ebx
+MMBN_LC1.exe+23A4BA: 89 4F 04        - mov [rdi+04],ecx
+MMBN_LC1.exe+23A4BD: 44 8B C1        - mov r8d,ecx
+MMBN_LC1.exe+23A4C0: 45 8B 0A        - mov r9d,[r10]
+MMBN_LC1.exe+23A4C3: 41 83 E0 02     - and r8d,02
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>7</ID>
+          <Description>"random battle - 0/off &amp; 999/instant"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>0000FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>80200088</Address>
+          <Offsets>
+            <Offset>40A4</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>14552</ID>
+      <Description>"Main Menu of Legacy Collection"</Description>
+      <Options moManualExpandCollapse="1"/>
+      <Color>FF00FF</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>11888</ID>
+          <Description>"GameChoice"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>FF00FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>MMBN_LC1.exe+989B384</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14551</ID>
+          <Description>"GameSelection"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>FF00FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>MMBN_LC1.exe+989BA88</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>14553</ID>
+      <Description>"Global Pointers"</Description>
+      <Options moManualExpandCollapse="1"/>
+      <Color>FF00FF</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>14499</ID>
           <Description>"GameState"</Description>
           <ShowAsSigned>0</ShowAsSigned>
-          <Color>FFFF00</Color>
-          <VariableType>4 Bytes</VariableType>
+          <Color>FF00FF</Color>
+          <VariableType>Byte</VariableType>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
             <Offset>0</Offset>
@@ -35,10 +395,10 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
-          <ID>11883</ID>
+          <ID>14554</ID>
           <Description>"MainAreaID"</Description>
           <ShowAsSigned>0</ShowAsSigned>
-          <Color>FFFF00</Color>
+          <Color>FF00FF</Color>
           <VariableType>Byte</VariableType>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
@@ -47,10 +407,10 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
-          <ID>12026</ID>
+          <ID>14555</ID>
           <Description>"SubAreaID"</Description>
           <ShowAsSigned>0</ShowAsSigned>
-          <Color>FFFF00</Color>
+          <Color>FF00FF</Color>
           <VariableType>Byte</VariableType>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
@@ -59,10 +419,22 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
+          <ID>14556</ID>
+          <Description>"Progress"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>FF00FF</Color>
+          <VariableType>Byte</VariableType>
+          <Address>"MMBN_LC1.exe"+029EE840</Address>
+          <Offsets>
+            <Offset>6</Offset>
+            <Offset>B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
           <ID>12031</ID>
           <Description>"Music_Progress"</Description>
           <ShowAsSigned>0</ShowAsSigned>
-          <Color>FFFF00</Color>
+          <Color>FF00FF</Color>
           <VariableType>Byte</VariableType>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
@@ -70,6 +442,81 @@
             <Offset>B8</Offset>
           </Offsets>
         </CheatEntry>
+        <CheatEntry>
+          <ID>1471</ID>
+          <Description>"Zenny"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>FF00FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029EE840</Address>
+          <Offsets>
+            <Offset>74</Offset>
+            <Offset>B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>11720</ID>
+          <Description>"GlobalDialogueValue?"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>FF00FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029F34C8</Address>
+          <Offsets>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14557</ID>
+          <Description>"EnemyID"</Description>
+          <Options moManualExpandCollapse="1"/>
+          <Color>FF00FF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>14559</ID>
+              <Description>"EnemyNumber1"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>FF00FF</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>50</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14561</ID>
+              <Description>"EnemyNumber2"</Description>
+              <Color>FF00FF</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>4</Offset>
+                <Offset>50</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14563</ID>
+              <Description>"EnemyNumber3"</Description>
+              <Color>FF00FF</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>8</Offset>
+                <Offset>50</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1470</ID>
+      <Description>"Megaman Battle Network 1"</Description>
+      <Options moHideChildren="1" moManualExpandCollapse="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
+      <Color>FFFF00</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
         <CheatEntry>
           <ID>12032</ID>
           <Description>"Battle_Paused"</Description>
@@ -167,27 +614,14 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
-          <ID>12030</ID>
-          <Description>"Zenny"</Description>
+          <ID>14565</ID>
+          <Description>"HP"</Description>
           <ShowAsSigned>0</ShowAsSigned>
           <Color>FFFF00</Color>
-          <VariableType>4 Bytes</VariableType>
-          <Address>"MMBN_LC1.exe"+029EE840</Address>
+          <VariableType>2 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029F3148</Address>
           <Offsets>
-            <Offset>74</Offset>
-            <Offset>B8</Offset>
-          </Offsets>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>12025</ID>
-          <Description>"Progress"</Description>
-          <ShowAsSigned>0</ShowAsSigned>
-          <Color>FFFF00</Color>
-          <VariableType>Byte</VariableType>
-          <Address>"MMBN_LC1.exe"+029EE840</Address>
-          <Offsets>
-            <Offset>6</Offset>
-            <Offset>B8</Offset>
+            <Offset>20</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
@@ -524,13 +958,6 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
-          <ID>12046</ID>
-          <Description>"No description"</Description>
-          <Color>FFFF00</Color>
-          <VariableType>Byte</VariableType>
-          <Address>80206990</Address>
-        </CheatEntry>
-        <CheatEntry>
           <ID>11824</ID>
           <Description>"In-Battle"</Description>
           <ShowAsSigned>0</ShowAsSigned>
@@ -544,14 +971,21 @@
         </CheatEntry>
         <CheatEntry>
           <ID>11786</ID>
-          <Description>"EnemyID&amp;HP"</Description>
+          <Description>"EnemyID"</Description>
           <Options moManualExpandCollapse="1"/>
           <Color>FFFF00</Color>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
+              <ID>11783</ID>
+              <Description>"EnemyNumber1"</Description>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>80014A10</Address>
+            </CheatEntry>
+            <CheatEntry>
               <ID>12056</ID>
-              <Description>"EnemyNo1"</Description>
+              <Description>"EnemyNumber1"</Description>
               <ShowAsSigned>0</ShowAsSigned>
               <VariableType>4 Bytes</VariableType>
               <Address>"MMBN_LC1.exe"+029EE840</Address>
@@ -561,19 +995,16 @@
               </Offsets>
             </CheatEntry>
             <CheatEntry>
-              <ID>11816</ID>
-              <Description>"EnemyNo1HP"</Description>
+              <ID>11785</ID>
+              <Description>"EnemyNumber2"</Description>
               <ShowAsSigned>0</ShowAsSigned>
-              <VariableType>2 Bytes</VariableType>
-              <Address>"MMBN_LC1.exe"+029F21F8</Address>
-              <Offsets>
-                <Offset>60</Offset>
-              </Offsets>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>80014a14</Address>
             </CheatEntry>
             <CheatEntry>
-              <ID>14513</ID>
-              <Description>"EnemyNo2"</Description>
-              <ShowAsSigned>0</ShowAsSigned>
+              <ID>11789</ID>
+              <Description>"EnemyNumber2"</Description>
               <VariableType>4 Bytes</VariableType>
               <Address>"MMBN_LC1.exe"+029EE840</Address>
               <Offsets>
@@ -582,33 +1013,20 @@
               </Offsets>
             </CheatEntry>
             <CheatEntry>
-              <ID>11817</ID>
-              <Description>"EnemyNo2HP"</Description>
-              <ShowAsSigned>0</ShowAsSigned>
-              <VariableType>2 Bytes</VariableType>
-              <Address>"MMBN_LC1.exe"+029F21F8</Address>
-              <Offsets>
-                <Offset>110</Offset>
-              </Offsets>
+              <ID>11784</ID>
+              <Description>"EnemyNumber3"</Description>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>80014A18</Address>
             </CheatEntry>
             <CheatEntry>
               <ID>11788</ID>
-              <Description>"EnemyNo3"</Description>
+              <Description>"EnemyNumber3"</Description>
               <VariableType>4 Bytes</VariableType>
               <Address>"MMBN_LC1.exe"+029EE840</Address>
               <Offsets>
                 <Offset>8</Offset>
                 <Offset>50</Offset>
-              </Offsets>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>11818</ID>
-              <Description>"EnemyNo3HP"</Description>
-              <ShowAsSigned>0</ShowAsSigned>
-              <VariableType>2 Bytes</VariableType>
-              <Address>"MMBN_LC1.exe"+029F21F8</Address>
-              <Offsets>
-                <Offset>1C0</Offset>
               </Offsets>
             </CheatEntry>
           </CheatEntries>
@@ -633,6 +1051,67 @@
           <Offsets>
             <Offset>28</Offset>
           </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>11778</ID>
+          <Description>"EnemyHP"</Description>
+          <Options moManualExpandCollapse="1"/>
+          <Color>FFFF00</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>11775</ID>
+              <Description>"FirstEnemyHP"</Description>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>802085F0</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11816</ID>
+              <Description>"EnemyHP1"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>2 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F21F8</Address>
+              <Offsets>
+                <Offset>60</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11777</ID>
+              <Description>"SecondEnemyHP"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>802086A0</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11817</ID>
+              <Description>"EnemyHP2"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>2 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F21F8</Address>
+              <Offsets>
+                <Offset>110</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11776</ID>
+              <Description>"ThirdEnemyHP"</Description>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>80208750</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11818</ID>
+              <Description>"EnemyHP3"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>2 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F21F8</Address>
+              <Offsets>
+                <Offset>1C0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
         </CheatEntry>
         <CheatEntry>
           <ID>22</ID>
@@ -7961,11 +8440,153 @@
           </CheatEntries>
         </CheatEntry>
         <CheatEntry>
-          <ID>11782</ID>
-          <Description>"AmountOfEnemiesActive"</Description>
+          <ID>11804</ID>
+          <Description>"EnemiesAlive"</Description>
+          <Options moHideChildren="1"/>
           <Color>FFFF00</Color>
-          <VariableType>4 Bytes</VariableType>
-          <Address>80206794</Address>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>11782</ID>
+              <Description>"AmountOfEnemiesActive"</Description>
+              <Color>FFFF00</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>80206794</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11790</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F49C8</Address>
+              <Offsets>
+                <Offset>634</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11791</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4958</Address>
+              <Offsets>
+                <Offset>6F4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11792</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F48E8</Address>
+              <Offsets>
+                <Offset>7B4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11793</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4878</Address>
+              <Offsets>
+                <Offset>874</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11794</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4808</Address>
+              <Offsets>
+                <Offset>934</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11795</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4798</Address>
+              <Offsets>
+                <Offset>9F4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11796</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4728</Address>
+              <Offsets>
+                <Offset>AB4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11797</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F46B8</Address>
+              <Offsets>
+                <Offset>B74</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11798</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4648</Address>
+              <Offsets>
+                <Offset>C34</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11799</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F45D8</Address>
+              <Offsets>
+                <Offset>CF4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11800</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4568</Address>
+              <Offsets>
+                <Offset>DB4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11801</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F44F8</Address>
+              <Offsets>
+                <Offset>E74</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11802</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4488</Address>
+              <Offsets>
+                <Offset>F34</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11803</ID>
+              <Description>"pointerscan result"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029F4418</Address>
+              <Offsets>
+                <Offset>FF4</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>12050</ID>
+          <Description>"No description"</Description>
+          <Color>FFFF00</Color>
+          <VariableType>Byte</VariableType>
+          <Address>80206990</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>12059</ID>
@@ -8051,18 +8672,6 @@
       <Color>00FF00</Color>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
-        <CheatEntry>
-          <ID>11893</ID>
-          <Description>"GameState"</Description>
-          <ShowAsSigned>0</ShowAsSigned>
-          <Color>00FF00</Color>
-          <VariableType>Byte</VariableType>
-          <Address>"MMBN_LC1.exe"+029EE840</Address>
-          <Offsets>
-            <Offset>0</Offset>
-            <Offset>B8</Offset>
-          </Offsets>
-        </CheatEntry>
         <CheatEntry>
           <ID>12027</ID>
           <Description>"Style_Active (not sure how to read)"</Description>
@@ -8206,6 +8815,16 @@
           <Color>00FF00</Color>
           <VariableType>Byte</VariableType>
           <Address>8020422B</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14568</ID>
+          <Description>"HP"</Description>
+          <Color>00FF80</Color>
+          <VariableType>2 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029F5988</Address>
+          <Offsets>
+            <Offset>24</Offset>
+          </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>11923</ID>
@@ -8642,18 +9261,6 @@
           <Address>"MMBN_LC1.exe"+029F4CD8</Address>
           <Offsets>
             <Offset>4</Offset>
-          </Offsets>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>11891</ID>
-          <Description>"GameStart(OLD)"</Description>
-          <ShowAsSigned>0</ShowAsSigned>
-          <Color>00FF00</Color>
-          <VariableType>4 Bytes</VariableType>
-          <Address>"MMBN_LC1.exe"+029EE840</Address>
-          <Offsets>
-            <Offset>88</Offset>
-            <Offset>B8</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
@@ -21239,6 +21846,7 @@
           <Description>"Chip List"</Description>
           <Options moHideChildren="1" moRecursiveSetValue="1" moManualExpandCollapse="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
           <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
           <GroupHeader>1</GroupHeader>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
@@ -30997,6 +31605,7 @@
           <Description>"Chip Library"</Description>
           <Options moHideChildren="1" moManualExpandCollapse="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
           <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
           <GroupHeader>1</GroupHeader>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
@@ -33865,8 +34474,9 @@
         <CheatEntry>
           <ID>14484</ID>
           <Description>"GameState"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
           <Color>00FFFF</Color>
-          <VariableType>4 Bytes</VariableType>
+          <VariableType>Byte</VariableType>
           <Address>"MMBN_LC1.exe"+029EE840</Address>
           <Offsets>
             <Offset>0</Offset>
@@ -33958,10 +34568,170 @@
           </Offsets>
         </CheatEntry>
         <CheatEntry>
+          <ID>14521</ID>
+          <Description>"MainRNG"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+16485EAA</Address>
+          <Offsets>
+            <Offset>897</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14520</ID>
+          <Description>"LazyRNG"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+16485EAA</Address>
+          <Offsets>
+            <Offset>89B</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14524</ID>
+          <Description>"Wind* Chip"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>2 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029EE840</Address>
+          <Offsets>
+            <Offset>E13</Offset>
+            <Offset>B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14527</ID>
+          <Description>"HP"</Description>
+          <Color>00FFFF</Color>
+          <VariableType>2 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029F9748</Address>
+          <Offsets>
+            <Offset>34</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14531</ID>
+          <Description>"N1 Prelim3 Win (0-&gt;1)"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>Byte</VariableType>
+          <Address>"MMBN_LC1.exe"+029FA938</Address>
+          <Offsets>
+            <Offset>E8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14532</ID>
+          <Description>"N1 Prelim3 Win (0-&gt;3)"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>Byte</VariableType>
+          <Address>"MMBN_LC1.exe"+029FA938</Address>
+          <Offsets>
+            <Offset>94</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14538</ID>
+          <Description>"Tora Jobs Finished"</Description>
+          <Color>00FFFF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029EE840</Address>
+          <Offsets>
+            <Offset>69C</Offset>
+            <Offset>B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14542</ID>
+          <Description>"Rank On Screen"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>MMBN_LC1.exe+29F0938</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14550</ID>
+          <Description>"Completed Split"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <Color>00FFFF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"MMBN_LC1.exe"+029FA938</Address>
+          <Offsets>
+            <Offset>60</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14544</ID>
+          <Description>"Key Items"</Description>
+          <Options moManualExpandCollapse="1"/>
+          <Color>00FFFF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>14536</ID>
+              <Description>"Tally (Get from final Tora Job)"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>104</Offset>
+                <Offset>B8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14545</ID>
+              <Description>"ACDCPass"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>148</Offset>
+                <Offset>B8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14548</ID>
+              <Description>"SciPass"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>149</Offset>
+                <Offset>B8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14546</ID>
+              <Description>"YokaPass"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>14A</Offset>
+                <Offset>B8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14547</ID>
+              <Description>"BeachPass"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>"MMBN_LC1.exe"+029EE840</Address>
+              <Offsets>
+                <Offset>14B</Offset>
+                <Offset>B8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
           <ID>14491</ID>
           <Description>"EnemyID"</Description>
           <Options moManualExpandCollapse="1"/>
-          <Color>FFFF00</Color>
+          <Color>00FFFF</Color>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
@@ -34001,6 +34771,7 @@
           <ID>14507</ID>
           <Description>"EnemyHP"</Description>
           <Options moManualExpandCollapse="1"/>
+          <Color>00FFFF</Color>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
@@ -34036,6 +34807,59 @@
           </CheatEntries>
         </CheatEntry>
       </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Instant delete (Press C after encountering enemy)"</Description>
+      <Options moRecursiveSetValue="1" moManualExpandCollapse="1" moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>2 Bytes</VariableType>
+      <Address>80206A50</Address>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Set Value</Action>
+          <Keys>
+            <Key>67</Key>
+          </Keys>
+          <Value>0</Value>
+          <ID>1</ID>
+        </Hotkey>
+      </Hotkeys>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>3</ID>
+          <Description>"2nd"</Description>
+          <VariableType>2 Bytes</VariableType>
+          <Address>80206B10</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>4</ID>
+          <Description>"3rd"</Description>
+          <VariableType>2 Bytes</VariableType>
+          <Address>80206BD0</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11919</ID>
+      <Description>"In-Battle/ResultsScreen"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"MMBN_LC1.exe"+029EE840</Address>
+      <Offsets>
+        <Offset>18</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11920</ID>
+      <Description>"ChipSelectionMenu"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"MMBN_LC1.exe"+029EE840</Address>
+      <Offsets>
+        <Offset>4C</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols>
