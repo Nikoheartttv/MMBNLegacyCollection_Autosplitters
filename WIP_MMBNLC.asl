@@ -54,7 +54,7 @@ state("MMBN_LC1")
 	byte MMBN1_LabMemo : 0x29EE840, 0xB8, 0xF5;
 	byte MMBN1_YuriMemo : 0x29EE840, 0xB8, 0xF6;
 	byte MMBN1_PaMemo : 0x29EE840, 0xB8, 0xF7;
-	int MMBN1_FinalSplit : 0x29F21F8, 0x4;
+	short MMBN1_FinalSplit : 0x29F21F8, 0x4;
 
 	// --- Mega Man Battle Network 2 Pointers
 	short MMBN2_ENoHP1 : 0x29F21F8, 0x1A4;
@@ -65,9 +65,17 @@ state("MMBN_LC1")
 	int MMBN2_FinalSplit: 0x29F4CD8, 0x4;
 
 	// --- Mega Man Battle Network 3 White/Blue Pointers
+	short MMBN3_HP : 0x29F9748, 0x34;
 	byte MMBN3_ENoHP1 : 0x29F9748, 0x108;
 	byte MMBN3_ENoHP2 : 0x29F9748, 0x1DC;
 	byte MMBN3_ENoHP3 : 0x29F9748, 0x2B0;
+	int MMBN3_MainRNG : 0x16485EAA, 0x897;
+	int MMBN3_LazyRNG : 0x16485EAA, 0x89B;
+	byte MMBN3_WindStarChip : 0x29EE840, 0xB8, 0xE13;
+	byte MMBN3_N1Prelim3Win : 0x29FA938, 0x94;
+	short MMBN3_Tally : 0x29EE840, 0xB8, 0x104;
+	short MMBN3_ToraJobsFinished : 0x29EE840, 0xB8, 0x69C;
+	byte MMBN3_Rank10OnScreen : 0x29F0938;
 }
 
 state("MMBN_LC2") 
@@ -87,6 +95,7 @@ state("MMBN_LC2")
 	byte MMBN4_ENo3 : 0x142CC291, 0xB57;
 	byte MMBN4_ENo3HP : 0x1169D9E6, 0x90C;
 	byte MMBN4_HP : 0x1169D9E6, 0x684;
+
 	// Progress hard to find - if absolutely needed, more delving into ram_offset
 	// Battle_Paused & Zenny also affected by RAM_Offset
 	// --- https://github.com/TeamBattleNet/Scripts/blob/dea3a2d44963007c8b2a1e1bba3fe5f05dda9829/HUD/BN4/RAM.lua#L12-L28
@@ -139,6 +148,7 @@ startup
 	settings.Add("Vol1GameState", false, "Game State");
 	settings.Add("Vol1AreaID", false, "Area ID");
 	settings.Add("Vol1SubAreaID", false, "Sub Area ID");
+	settings.Add("Vol1Progress", false, "Progress");
 	settings.Add("Vol1ENo1", false, "Enemy Number 1 ID");
 	settings.Add("Vol1ENo2", false, "Enemy Number 2 ID");
 	settings.Add("Vol1ENo3", false, "Enemy Number 3 ID");
@@ -306,6 +316,12 @@ startup
 	settings.Add("BN3W", true, "Mega Man Battle Network 3 White");
 	settings.CurrentDefaultParent = "BN3W";
 
+	settings.Add("BN3WLogging", false, "BN3W Logging");
+	settings.CurrentDefaultParent = "BN3WLogging";
+	settings.Add("3MainRNG", false, "Main RNG Hexidecimal");
+	settings.Add("3LazyRNG", false, "Lazy RNG Hexidecimal");
+	settings.CurrentDefaultParent = "BN3W";
+
 	// V2/V3 of enemies, or Alpha, Beta and Omega???
 	settings.Add("BN3WMainSplits", true, "Main Splits");
 	settings.CurrentDefaultParent = "BN3WMainSplits";
@@ -319,38 +335,91 @@ startup
 	settings.Add("3DesertMan", true, "DesertMan");
 	settings.Add("3ToraJobs", true, "Tora Jobs");
 	settings.Add("3PlantMan", true, "PlantMan");
-	settings.Add("3StartFires", true, "Start Fires");
-	settings.Add("3FlameMan", true, "FlameMan");
+	settings.Add("3FiresStarted", true, "Fires Started - SciLab Train Stairs End Convo");
+	settings.Add("3FlamMan", true, "FlamMan");
 	settings.Add("3Rank10", true, "Rank 10");
-	settings.Add("3DrillMan", true, "FlameMan");
-	// is BubbleManV2 correct?
-	settings.Add("3BubbleManV2", true, "BubbleMan V2");
+	settings.Add("3DrillManBeta", true, "DrillMan Beta / V3");
+	settings.Add("3BubbleManAlpha", true, "BubbleMan Alpha V2");
 	settings.Add("3Completion", true, "Completion");
 	settings.CurrentDefaultParent = "BN3W";
 
 	settings.Add("BN3WOBosses", false, "Optional Bosses");
 	settings.CurrentDefaultParent = "BN3WOBosses";
-	// settings.Add("3FlashManAlpha", true, "FlashMan Alpha");
-	// settings.Add("3FlashManBeta", true, "FlashMan Beta");
-	// settings.Add("3FlashManOmega", true, "FlashMan Omega");
+
+	settings.Add("3FlashManAlpha", true, "FlashMan Alpha / V2");
+	settings.Add("3FlashManBeta", true, "FlashMan Beta / V3");
+	settings.Add("3FlashManOmega", true, "FlashMan Omega / SP");
+	settings.Add("3BeastManAlpha", true, "BeastMan Alpha / V2");
+	settings.Add("3BeastManBeta", true, "BeastMan Beta / V3");
+	settings.Add("3BeastManOmega", true, "BeastMan Omega / SP");
+	settings.Add("3BubbleManBeta", true, "BubbleMan Beta / V3");
+	settings.Add("3BubbleManOmega", true, "BubbleMan Omega / SP");
+	settings.Add("3DesertManAlpha", true, "DesertMan Alpha / V2");
+	settings.Add("3DesertManBeta", true, "DesertMan Beta / V3");
+	settings.Add("3DesertManOmega", true, "DesertMan Omega / SP");
+	settings.Add("3PlantManAlpha", true, "PlantMan Alpha / V2");
+	settings.Add("3PlantManBeta", true, "PlantMan Beta / V3");
+	settings.Add("3PlantManOmega", true, "PlantMan Omega / SP");
+	settings.Add("3FlamManAlpha", true, "FlamMan Alpha / V2");
+	settings.Add("3FlamManBeta", true, "FlamMan Beta / V3");
+	settings.Add("3FlamManOmega", true, "FlamMan Omega / SP");
+	settings.Add("3DrillMan", true, "DrillMan");
+	settings.Add("3DrillManAlpha", true, "DrillMan Alpha / V2");
+	settings.Add("3DrillManOmega", true, "DrillMan Omega / SP");
 	settings.Add("3Alpha", true, "Alpha");
 	settings.Add("3AlphaOmega", true, "Alpha Omega");
 	settings.Add("3GutsMan", true, "GutsMan");
+	settings.Add("3GutsManAlpha", true, "GutsMan Alpha / V2");
+	settings.Add("3GutsManBeta", true, "GutsMan Beta / V3");
+	settings.Add("3GutsManOmega", true, "GutsMan Omega / SP");
 	settings.Add("3ProtoMan", true, "ProtoMan");
+	settings.Add("3ProtoManAlpha", true, "ProtoMan Alpha / V2");
+	settings.Add("3ProtoManBeta", true, "ProtoMan Beta / V3");
+	settings.Add("3ProtoManOmega", true, "ProtoMan Omega / SP");
 	settings.Add("3MetalMan", true, "MetalMan");
+	settings.Add("3MetalManAlpha", true, "MetalMan Alpha / V2");
+	settings.Add("3MetalManBeta", true, "MetalMan Beta / V3");
+	settings.Add("3MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("3Punk", true, "Punk");
+	settings.Add("3PunkAlpha", true, "Punk Alpha / V2");
+	settings.Add("3PunkBeta", true, "Punk Beta / V3");
+	settings.Add("3PunkOmega", true, "Punk Omega / SP");
 	settings.Add("3KingMan", true, "KingMan");
+	settings.Add("3KingManAlpha", true, "KingMan Alpha / V2");
+	settings.Add("3KingManBeta", true, "KingMan Beta / V3");
+	settings.Add("3KingManOmega", true, "KingMan Omega / SP");
 	settings.Add("3MistMan", true, "MistMan");
+	settings.Add("3MistManAlpha", true, "MistMan Alpha / V2");
+	settings.Add("3MistManBeta", true, "MistMan Beta / V3");
+	settings.Add("3MistManOmega", true, "MistMan Omega / SP");
 	settings.Add("3BowlMan", true, "BowlMan");
+	settings.Add("3BowlManAlpha", true, "BowlMan Alpha / V2");
+	settings.Add("3BowlManBeta", true, "BowlMan Beta / V3");
+	settings.Add("3BowlManOmega", true, "BowlMan Omega / SP");
 	settings.Add("3DarkMan", true, "DarkMan");
+	settings.Add("3DarkManAlpha", true, "DarkMan Alpha / V2");
+	settings.Add("3DarkManBeta", true, "DarkMan Beta / V3");
+	settings.Add("3DarkManOmega", true, "DarkMan Omega / SP");
 	settings.Add("3JapanMan", true, "JapanMan");
+	settings.Add("3JapanManAlpha", true, "JapanMan Alpha / V2");
+	settings.Add("3JapanManBeta", true, "JapanMan Beta / V3");
+	settings.Add("3JapanManOmega", true, "JapanMan Omega / SP");
 	settings.Add("3Serenade", true, "Serenade");
+	settings.Add("3SerenadeAlpha", true, "Serenade Alpha / V2");
+	settings.Add("3SerenadeBeta", true, "Serenade Beta / V3");
+	settings.Add("3SerenadeOmega", true, "Serenade Alpha / SP");
 	settings.Add("3Bass", true, "Bass");
 	settings.Add("3BassGS", true, "Bass GS");
 	settings.Add("3BassOmega", true, "Bass Omega");
 	settings.CurrentDefaultParent = "Vol1";
 
 	settings.Add("BN3B", true, "Mega Man Battle Network 3 Blue");
+	settings.CurrentDefaultParent = "BN3B";
+
+	settings.Add("BN3BLogging", false, "BN3B Logging");
+	settings.CurrentDefaultParent = "BN3BLogging";
+	settings.Add("4MainRNG", false, "Main RNG Hexidecimal");
+	settings.Add("4LazyRNG", false, "Lazy RNG Hexidecimal");
 	settings.CurrentDefaultParent = "BN3B";
 
 	settings.Add("BN3BMainSplits", true, "Main Splits");
@@ -365,10 +434,10 @@ startup
 	settings.Add("4DesertMan", true, "DesertMan");
 	settings.Add("4ToraJobs", true, "Tora Jobs");
 	settings.Add("4PlantMan", true, "PlantMan");
-	settings.Add("4StartFires", true, "Start Fires");
-	settings.Add("4FlameMan", true, "FlameMan");
+	settings.Add("4FiresStarted", true, "Fires Started - SciLab Train Stairs End Convo");
+	settings.Add("4FlamMan", true, "FlamMan");
 	settings.Add("4Rank10", true, "Rank 10");
-	settings.Add("4DrillMan", true, "FlameMan");
+	settings.Add("4DrillMan", true, "FlamMan");
 	settings.Add("4BubbleManV2", true, "BubbleMan V2");
 	settings.Add("4Completion", true, "Completion");
 	settings.CurrentDefaultParent = "BN3B";
@@ -378,8 +447,12 @@ startup
 	settings.Add("4Alpha", true, "Alpha");
 	settings.Add("4AlphaOmega", true, "Alpha Omega");
 	settings.Add("4GutsMan", true, "GutsMan");
+	settings.Add("4GutsManAlpha", true, "GutsMan Alpha / V2");
 	settings.Add("4ProtoMan", true, "ProtoMan");
 	settings.Add("4MetalMan", true, "MetalMan");
+	settings.Add("4MetalManAlpha", true, "MetalMan Alpha / V2");
+	settings.Add("4MetalManBeta", true, "MetalMan Beta / V3");
+	settings.Add("4MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("4Punk", true, "Punk");
 	settings.Add("4KingMan", true, "KingMan");
 	settings.Add("4MistMan", true, "MistMan");
@@ -424,6 +497,10 @@ init
 	vars.LC1GC = "";
 	vars.LC2Version = "";
 	vars.LC2GC = "";
+	vars.MMBN3W_N1Prelim3 = 0;
+	vars.MMBN3B_N1Prelim3 = 0;
+	vars.MMBW3_ToraJobDone = 0;
+	vars.MMB3_Rank10 = 0;
 }
 
 start
@@ -595,78 +672,94 @@ update
 					}
 				case 3: case 4:
 				{
+					if(settings["3MainRNG"] && current.MMBN3_MainRNG != old.MMBN3_MainRNG) print("BN3W_MainRNG: " + current.MMBN3_MainRNG.ToString("X"));
+					if(settings["3LazyRNG"] && current.MMBN3_LazyRNG != old.MMBN3_LazyRNG) print("BN3W_LazyRNG: " + current.MMBN3_LazyRNG.ToString("X"));
+					if(settings["4MainRNG"] && current.MMBN3_MainRNG != old.MMBN3_MainRNG) print("BN3B_MainRNG: " + current.MMBN3_MainRNG.ToString("X"));
+					if(settings["4LazyRNG"] && current.MMBN3_LazyRNG != old.MMBN3_LazyRNG) print("BN3B_LazyRNG: " + current.MMBN3_LazyRNG.ToString("X"));
+					if(old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
+						{
+							vars.MMBW3_ToraJobDone = 1;
+							print("ToraJobDone: " + vars.MMBW3_ToraJobDone.ToString());
+						}
+					if(vars.MMBW3_ToraJobDone == 1 && old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256)
+						{
+							vars.MMBW3_ToraJobDone = 2;
+							print("ToraJobDone: " + vars.MMBW3_ToraJobDone.ToString());
+						}
+					
+					if(current.MMBN3_ToraJobsFinished != old.MMBN3_ToraJobsFinished) print("MMBN3_ToraJobsFinished: " + current.MMBN3_ToraJobsFinished.ToString());
 					// Complete all of BN3B and BN3W associated bosses
 					if ((old.LC1_ENo1 != current.LC1_ENo1) && 
 						(settings[current.LC1_GameChoice.ToString() + "FlashMan"] && current.LC1_ENo1 == 168
-						// || settings[current.LC1_GameChoice.ToString() + "FlashManAlpha"] && current.LC1_ENo1 == 169
-						// || settings[current.LC1_GameChoice.ToString() + "FlashManBeta"] && current.LC1_ENo1 == 170
-						// || settings[current.LC1_GameChoice.ToString() + "FlashManOmega"] && current.LC1_ENo1 == 171
+						|| settings[current.LC1_GameChoice.ToString() + "FlashManAlpha"] && current.LC1_ENo1 == 169
+						|| settings[current.LC1_GameChoice.ToString() + "FlashManBeta"] && current.LC1_ENo1 == 170
+						|| settings[current.LC1_GameChoice.ToString() + "FlashManOmega"] && current.LC1_ENo1 == 171
 						|| settings[current.LC1_GameChoice.ToString() + "BeastMan"] && current.LC1_ENo1 == 172
-						// || settings[current.LC1_GameChoice.ToString() + "BeastManAlpha"] && current.LC1_ENo1 == 173
-						// || settings[current.LC1_GameChoice.ToString() + "BeastManBeta"] && current.LC1_ENo1 == 174
-						// || settings[current.LC1_GameChoice.ToString() + "BeastManOmega"] && current.LC1_ENo1 == 175
+						|| settings[current.LC1_GameChoice.ToString() + "BeastManAlpha"] && current.LC1_ENo1 == 173
+						|| settings[current.LC1_GameChoice.ToString() + "BeastManBeta"] && current.LC1_ENo1 == 174
+						|| settings[current.LC1_GameChoice.ToString() + "BeastManOmega"] && current.LC1_ENo1 == 175
 						|| settings[current.LC1_GameChoice.ToString() + "BubbleMan"] && current.LC1_ENo1 == 176
-						// || settings[current.LC1_GameChoice.ToString() + "BubbleManAlpha"] && current.LC1_ENo1 == 177
-						// || settings[current.LC1_GameChoice.ToString() + "BubbleManBeta"] && current.LC1_ENo1 == 178
-						// || settings[current.LC1_GameChoice.ToString() + "BubbleManOmega"] && current.LC1_ENo1 == 179
+						|| settings[current.LC1_GameChoice.ToString() + "BubbleManAlpha"] && current.LC1_ENo1 == 177
+						|| settings[current.LC1_GameChoice.ToString() + "BubbleManBeta"] && current.LC1_ENo1 == 178
+						|| settings[current.LC1_GameChoice.ToString() + "BubbleManOmega"] && current.LC1_ENo1 == 179
 						|| settings[current.LC1_GameChoice.ToString() + "DesertMan"] && current.LC1_ENo1 == 180
-						// || settings[current.LC1_GameChoice.ToString() + "DesertManAlpha"] && current.LC1_ENo1 == 181
-						// || settings[current.LC1_GameChoice.ToString() + "DesertManBeta"] && current.LC1_ENo1 == 182
-						// || settings[current.LC1_GameChoice.ToString() + "DesertManOmega"] && current.LC1_ENo1 == 183
+						|| settings[current.LC1_GameChoice.ToString() + "DesertManAlpha"] && current.LC1_ENo1 == 181
+						|| settings[current.LC1_GameChoice.ToString() + "DesertManBeta"] && current.LC1_ENo1 == 182
+						|| settings[current.LC1_GameChoice.ToString() + "DesertManOmega"] && current.LC1_ENo1 == 183
 						|| settings[current.LC1_GameChoice.ToString() + "PlantMan"] && current.LC1_ENo1 == 184
-						// || settings[current.LC1_GameChoice.ToString() + "PlantManAlpha"] && current.LC1_ENo1 == 185
-						// || settings[current.LC1_GameChoice.ToString() + "PlantManBeta"] && current.LC1_ENo1 == 186
-						// || settings[current.LC1_GameChoice.ToString() + "PlantManOmega"] && current.LC1_ENo1 == 187
-						|| settings[current.LC1_GameChoice.ToString() + "FlameMan"] && current.LC1_ENo1 == 188
-						// || settings[current.LC1_GameChoice.ToString() + "FlameManAlpha"] && current.LC1_ENo1 == 189
-						// || settings[current.LC1_GameChoice.ToString() + "FlameManBeta"] && current.LC1_ENo1 == 190
-						// || settings[current.LC1_GameChoice.ToString() + "FlameManOmega"] && current.LC1_ENo1 == 191
+						|| settings[current.LC1_GameChoice.ToString() + "PlantManAlpha"] && current.LC1_ENo1 == 185
+						|| settings[current.LC1_GameChoice.ToString() + "PlantManBeta"] && current.LC1_ENo1 == 186
+						|| settings[current.LC1_GameChoice.ToString() + "PlantManOmega"] && current.LC1_ENo1 == 187
+						|| settings[current.LC1_GameChoice.ToString() + "FlamMan"] && current.LC1_ENo1 == 188
+						|| settings[current.LC1_GameChoice.ToString() + "FlamManAlpha"] && current.LC1_ENo1 == 189
+						|| settings[current.LC1_GameChoice.ToString() + "FlamManBeta"] && current.LC1_ENo1 == 190
+						|| settings[current.LC1_GameChoice.ToString() + "FlamManOmega"] && current.LC1_ENo1 == 191
 						|| settings[current.LC1_GameChoice.ToString() + "DrillMan"] && current.LC1_ENo1 == 192
-						// || settings[current.LC1_GameChoice.ToString() + "DrillManAlpha"] && current.LC1_ENo1 == 193
-						// || settings[current.LC1_GameChoice.ToString() + "DrillManBeta"] && current.LC1_ENo1 == 194
-						// || settings[current.LC1_GameChoice.ToString() + "DrillManOmega"] && current.LC1_ENo1 == 195
+						|| settings[current.LC1_GameChoice.ToString() + "DrillManAlpha"] && current.LC1_ENo1 == 193
+						|| settings[current.LC1_GameChoice.ToString() + "DrillManBeta"] && current.LC1_ENo1 == 194
+						|| settings[current.LC1_GameChoice.ToString() + "DrillManOmega"] && current.LC1_ENo1 == 195
 						|| settings[current.LC1_GameChoice.ToString() + "Alpha"] && current.LC1_ENo1 == 196
 						|| settings[current.LC1_GameChoice.ToString() + "AlphaOmega"] && current.LC1_ENo1 == 197
 						|| settings[current.LC1_GameChoice.ToString() + "GutsMan"] && current.LC1_ENo1 == 200
-						// || settings[current.LC1_GameChoice.ToString() + "GutsManAlpha"] && current.LC1_ENo1 == 201
-						// || settings[current.LC1_GameChoice.ToString() + "GutsManBeta"] && current.LC1_ENo1 == 202
-						// || settings[current.LC1_GameChoice.ToString() + "GutsManOmega"] && current.LC1_ENo1 == 203
+						|| settings[current.LC1_GameChoice.ToString() + "GutsManAlpha"] && current.LC1_ENo1 == 201
+						|| settings[current.LC1_GameChoice.ToString() + "GutsManBeta"] && current.LC1_ENo1 == 202
+						|| settings[current.LC1_GameChoice.ToString() + "GutsManOmega"] && current.LC1_ENo1 == 203
 						|| settings[current.LC1_GameChoice.ToString() + "ProtoMan"] && current.LC1_ENo1 == 204
-						// || settings[current.LC1_GameChoice.ToString() + "ProtoManAlpha"] && current.LC1_ENo1 == 205
-						// || settings[current.LC1_GameChoice.ToString() + "ProtoManBeta"] && current.LC1_ENo1 == 206
-						// || settings[current.LC1_GameChoice.ToString() + "ProtoManOmega"] && current.LC1_ENo1 == 207
+						|| settings[current.LC1_GameChoice.ToString() + "ProtoManAlpha"] && current.LC1_ENo1 == 205
+						|| settings[current.LC1_GameChoice.ToString() + "ProtoManBeta"] && current.LC1_ENo1 == 206
+						|| settings[current.LC1_GameChoice.ToString() + "ProtoManOmega"] && current.LC1_ENo1 == 207
 						|| settings[current.LC1_GameChoice.ToString() + "MetalMan"] && current.LC1_ENo1 == 208
-						// || settings[current.LC1_GameChoice.ToString() + "MetalManAlpha"] && current.LC1_ENo1 == 209
-						// || settings[current.LC1_GameChoice.ToString() + "MetalManBeta"] && current.LC1_ENo1 == 210
-						// || settings[current.LC1_GameChoice.ToString() + "MetalManOmega"] && current.LC1_ENo1 == 211
+						|| settings[current.LC1_GameChoice.ToString() + "MetalManAlpha"] && current.LC1_ENo1 == 209
+						|| settings[current.LC1_GameChoice.ToString() + "MetalManBeta"] && current.LC1_ENo1 == 210
+						|| settings[current.LC1_GameChoice.ToString() + "MetalManOmega"] && current.LC1_ENo1 == 211
 						|| settings[current.LC1_GameChoice.ToString() + "Punk"] && current.LC1_ENo1 == 212
-						// || settings[current.LC1_GameChoice.ToString() + "PunkAlpha"] && current.LC1_ENo1 == 213
-						// || settings[current.LC1_GameChoice.ToString() + "PunkBeta"] && current.LC1_ENo1 == 214
-						// || settings[current.LC1_GameChoice.ToString() + "PunkOmega"] && current.LC1_ENo1 == 215
+						|| settings[current.LC1_GameChoice.ToString() + "PunkAlpha"] && current.LC1_ENo1 == 213
+						|| settings[current.LC1_GameChoice.ToString() + "PunkBeta"] && current.LC1_ENo1 == 214
+						|| settings[current.LC1_GameChoice.ToString() + "PunkOmega"] && current.LC1_ENo1 == 215
 						|| settings[current.LC1_GameChoice.ToString() + "KingMan"] && current.LC1_ENo1 == 216
-						// || settings[current.LC1_GameChoice.ToString() + "KingManAlpha"] && current.LC1_ENo1 == 217
-						// || settings[current.LC1_GameChoice.ToString() + "KingManBeta"] && current.LC1_ENo1 == 218
-						// || settings[current.LC1_GameChoice.ToString() + "KingManOmega"] && current.LC1_ENo1 == 219
+						|| settings[current.LC1_GameChoice.ToString() + "KingManAlpha"] && current.LC1_ENo1 == 217
+						|| settings[current.LC1_GameChoice.ToString() + "KingManBeta"] && current.LC1_ENo1 == 218
+						|| settings[current.LC1_GameChoice.ToString() + "KingManOmega"] && current.LC1_ENo1 == 219
 						|| settings[current.LC1_GameChoice.ToString() + "MistMan"] && current.LC1_ENo1 == 220
-						// || settings[current.LC1_GameChoice.ToString() + "MistManAlpha"] && current.LC1_ENo1 == 221
-						// || settings[current.LC1_GameChoice.ToString() + "MistManBeta"] && current.LC1_ENo1 == 222
-						// || settings[current.LC1_GameChoice.ToString() + "MistManOmega"] && current.LC1_ENo1 == 223
+						|| settings[current.LC1_GameChoice.ToString() + "MistManAlpha"] && current.LC1_ENo1 == 221
+						|| settings[current.LC1_GameChoice.ToString() + "MistManBeta"] && current.LC1_ENo1 == 222
+						|| settings[current.LC1_GameChoice.ToString() + "MistManOmega"] && current.LC1_ENo1 == 223
 						|| settings[current.LC1_GameChoice.ToString() + "BowlMan"] && current.LC1_ENo1 == 224
-						// || settings[current.LC1_GameChoice.ToString() + "BowlManAlpha"] && current.LC1_ENo1 == 225
-						// || settings[current.LC1_GameChoice.ToString() + "BowlManBeta"] && current.LC1_ENo1 == 226
-						// || settings[current.LC1_GameChoice.ToString() + "BowlManOmega"] && current.LC1_ENo1 == 227
+						|| settings[current.LC1_GameChoice.ToString() + "BowlManAlpha"] && current.LC1_ENo1 == 225
+						|| settings[current.LC1_GameChoice.ToString() + "BowlManBeta"] && current.LC1_ENo1 == 226
+						|| settings[current.LC1_GameChoice.ToString() + "BowlManOmega"] && current.LC1_ENo1 == 227
 						|| settings[current.LC1_GameChoice.ToString() + "DarkMan"] && current.LC1_ENo1 == 228
-						// || settings[current.LC1_GameChoice.ToString() + "DarkManAlpha"] && current.LC1_ENo1 == 229
-						// || settings[current.LC1_GameChoice.ToString() + "DarkManBeta"] && current.LC1_ENo1 == 230
-						// || settings[current.LC1_GameChoice.ToString() + "DarkManOmega"] && current.LC1_ENo1 == 231
+						|| settings[current.LC1_GameChoice.ToString() + "DarkManAlpha"] && current.LC1_ENo1 == 229
+						|| settings[current.LC1_GameChoice.ToString() + "DarkManBeta"] && current.LC1_ENo1 == 230
+						|| settings[current.LC1_GameChoice.ToString() + "DarkManOmega"] && current.LC1_ENo1 == 231
 						|| settings[current.LC1_GameChoice.ToString() + "JapanMan"] && current.LC1_ENo1 == 232
-						// || settings[current.LC1_GameChoice.ToString() + "JapanManAlpha"] && current.LC1_ENo1 == 233
-						// || settings[current.LC1_GameChoice.ToString() + "JapanManBeta"] && current.LC1_ENo1 == 234
-						// || settings[current.LC1_GameChoice.ToString() + "JapanManOmega"] && current.LC1_ENo1 == 235
-						|| settings[current.LC1_GameChoice.ToString() + "Serenade"] && current.LC1_ENo1 == 236
-						// || settings[current.LC1_GameChoice.ToString() + "SerenadeAlpha"] && current.LC1_ENo1 == 237
-						// || settings[current.LC1_GameChoice.ToString() + "SerenadeBeta"] && current.LC1_ENo1 == 238
-						// || settings[current.LC1_GameChoice.ToString() + "SerenadeOmega"] && current.LC1_ENo1 == 239
+						|| settings[current.LC1_GameChoice.ToString() + "JapanManAlpha"] && current.LC1_ENo1 == 233
+						|| settings[current.LC1_GameChoice.ToString() + "JapanManBeta"] && current.LC1_ENo1 == 234
+						|| settings[current.LC1_GameChoice.ToString() + "JapanManOmega"] && current.LC1_ENo1 == 235
+						|| settings[current.LC1_GameChoice.ToString() + "dSerenade"] && current.LC1_ENo1 == 236
+						|| settings[current.LC1_GameChoice.ToString() + "SerenadeAlpha"] && current.LC1_ENo1 == 237
+						|| settings[current.LC1_GameChoice.ToString() + "SerenadeBeta"] && current.LC1_ENo1 == 238
+						|| settings[current.LC1_GameChoice.ToString() + "SerenadeOmega"] && current.LC1_ENo1 == 239
 						|| settings[current.LC1_GameChoice.ToString() + "Bass"] && current.LC1_ENo1 == 241
 						|| settings[current.LC1_GameChoice.ToString() + "BassGS"] && current.LC1_ENo1 == 242
 						|| settings[current.LC1_GameChoice.ToString() + "BassOmega"] && current.LC1_ENo1 == 243))
@@ -684,7 +777,8 @@ update
 			if(settings["Vol1ENo3"] && current.LC1_ENo3 != old.LC1_ENo3) print("LC1_ENo3: " + current.LC1_ENo3.ToString());
 			if(settings["Vol1GameChoice"] && current.LC1_GameChoice != old.LC1_GameChoice) print("LC1_GameChoice: " + current.LC1_GameChoice.ToString());
 			if(settings["Vol1GameSelected"] && current.LC1_GameSelected != old.LC1_GameSelected) print("LC1_GameSelected: " + current.LC1_GameSelected.ToString());
-
+			if(settings["Vol1Progress"] && current.LC1_Progress != old.LC1_Progress) print("LC1_Progress: " + current.LC1_Progress.ToString());
+			
 			break;
 		}
 		case "MMBN_LC2":
@@ -742,7 +836,7 @@ split
 			return true;
 		}
 	
-	if (current.MMBN1_HigsMemo == 1 && current.MMBN1_LabMemo == 1
+	if (current.LC1_GameChoice == 0 && current.MMBN1_HigsMemo == 1 && current.MMBN1_LabMemo == 1
 		&& current.MMBN1_YuriMemo == 1 & current.MMBN1_PaMemo == 1
 		&& old.LC1_AreaID == 2 && old.LC1_SubAreaID == 5
 		&& current.LC1_AreaID == 137 && current.LC1_SubAreaID == 0)
@@ -750,14 +844,14 @@ split
 			return true;
 		}
 
-	if (settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
+	if (current.LC1_GameChoice == 0 && settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
 		&& vars.WWWBaseEntered.Contains("Entered") 
 		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 		{
 			return true;
 		}
 
-	if (settings["BN1NoLifeVirusSplit"] 
+	if (current.LC1_GameChoice == 0 && settings["BN1NoLifeVirusSplit"] 
 		&& vars.WWWBaseEntered.Contains("Entered") 
 		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 		{
@@ -774,45 +868,47 @@ split
 			return true;
 		}
 
-	if (settings["2ZLicensePassed"] && old.LC1_Progress == 3 && current.LC1_Progress == 4
+	if (current.LC1_GameChoice == 2 && 
+		(settings["2ZLicensePassed"] && old.LC1_Progress == 3 && current.LC1_Progress == 4
 		|| settings["2BLicensePassed"] && old.MMBN2_BLicense == 0 && current.MMBN2_BLicense == 1
 		|| settings["2ALicensePrelims"] && old.LC1_Progress == 18 && current.LC1_Progress == 19 
 		|| settings["2ALicenseExam"] && old.LC1_Progress == 19 && current.LC1_Progress == 20
 		|| settings["2EscapedYumland"] & old.LC1_Progress == 25 && current.LC1_Progress == 26
-		|| settings["2HeatData"] & old.MMBN2_HeatData == 0 && current.MMBN2_HeatData == 1)
+		|| settings["2HeatData"] & old.MMBN2_HeatData == 0 && current.MMBN2_HeatData == 1))
 		{
 			return true;
 		}
 
-	if (settings["2BossRush1"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 3
+	if (current.LC1_GameChoice == 2 && settings["2BossRush1"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 3
 		 && old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 134)
 		{
 			print("Boss Rush 1 Done");
 			return true;
 		}
 
-	if (settings["2BossRush2"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 4
+	if (current.LC1_GameChoice == 2 && settings["2BossRush2"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 4
 		 && old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 146)
 		{
 			print("Boss Rush 2 Done");
 			return true;
 		}
 
-	if (settings["2Bass"] && current.LC1_ENo1 == 182
+	if (current.LC1_GameChoice == 2 && settings["2Bass"] && current.LC1_ENo1 == 182
 		&& old.LC1_GameState == 12 && current.LC1_GameState != 12 )
 		{
 			print("Bass Defeated");
 			return true;
 		}
 
-	if (settings["2Completed"] && current.LC1_ENo1 == 149
+	if (current.LC1_GameChoice == 2 && settings["2Completed"] && current.LC1_ENo1 == 149
 		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
 		{
 			print("Gospel Defeated");
 			vars.BossDefeated.Add("2GospelDead");
 		}
 
-	if (settings["2Completed"] && vars.BossDefeated.Contains("2GospelDead")
+	if (current.LC1_GameChoice == 2 && settings["2Completed"] 
+		&& vars.BossDefeated.Contains("2GospelDead")
 		&& current.LC1_AreaID == 2 && current.LC1_SubAreaID == 4
 		&& old.MMBN2_FinalSplit == 0 && current.MMBN2_FinalSplit == 50)
 		{
@@ -820,14 +916,16 @@ split
 			return true;
 		}
 
-	if (settings["2GospelSplit"] && current.LC1_ENo1 == 149
-		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
+	if (current.LC1_GameChoice == 2 && settings["2GospelSplit"] 
+		&& current.LC1_ENo1 == 149 && old.LC1_GameState == 12 
+		&& current.LC1_GameState != 12)
 		{
 			print("Alt Gospel Split");
 			return true;
 		}
 
-	if (settings["2Doghouse"] && (old.LC1_AreaID == 140 && old.LC1_SubAreaID == 2)
+	if (current.LC1_GameChoice == 2 && settings["2Doghouse"] && 
+		(old.LC1_AreaID == 140 && old.LC1_SubAreaID == 2)
 		&& (current.LC1_AreaID == 0 && current.LC1_SubAreaID == 0))
 		{
 			return true;
@@ -842,10 +940,59 @@ split
 			return true;
 		}
 
-	if (settings[current.LC1_GameChoice.ToString() + "N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
-	{
-		return true;
-	}
+	if (current.LC1_GameChoice == 3 
+		&& (
+			(settings["3N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
+			|| (settings["3N1Prelim2"] & old.LC1_Progress == 21 && current.LC1_Progress == 22)
+			|| (settings["3Wind"] && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
+			|| (settings["3FiresStarted"] && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
+		{
+			return true;
+		}
+	
+	if (current.LC1_GameChoice == 3 && vars.MMBN3W_N1Prelim3 != 1
+		&& (settings["3N1Prelim3"] && current.LC1_Progress == 34
+				&& old.MMBN3_N1Prelim3Win == 0 && current.MMBN3_N1Prelim3Win == 3))
+				{
+					return true;
+					vars.MMBN3W_N1Prelim3 = 1;
+				}
+
+	// if ((old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
+	// 	&& (old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256))
+	// 	{
+	// 		return true;
+	// 	}
+
+	if (current.LC1_GameChoice == 3 && vars.MMBW3_ToraJobDone == 2
+		&& settings["3ToraJobs"] && current.LC1_Progress == 66)
+		{
+			vars.MMBW3_ToraJobDone = 3;
+			return true;
+		}
+
+	if (current.LC1_GameChoice == 3 && current.MMBN3_Rank10OnScreen == 10
+		&& vars.MMB3_Rank10 == 0 && settings["3Rank10"] && current.LC1_Progress == 98)
+		{
+			vars.MMB3_Rank10 = 1;
+			return true;
+		}
+
+	if (current.LC1_GameChoice == 4 
+		&& ((settings["4N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
+		|| (settings["4N1Prelim2"] & old.LC1_Progress == 21 && current.LC1_Progress == 22)))
+		{
+			return true;
+		}
+
+	// if ((current.LC1_GameChoice == 3 || current.LC1_GameChoice == 4)
+	// 	&& ((settings["3N1Prelim1"] || settings["4N1Prelim1"]) 
+	// 	&& old.LC1_Progress == 2 && current.LC1_Progress == 3)
+	// 	|| ((settings["3N1Prelim2"] || settings["4N1Prelim2"] 
+	// 	&& old.LC1_Progress == 21 && current.LC1_Progress == 22)))
+	// {
+	// 	return true;
+	// }
 		// || settings[current.LC1_GameChoice.ToString() + "N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3
 }
 
@@ -860,4 +1007,8 @@ onReset
 	vars.BossDefeated.Clear();
 	vars.WWWBaseEntered.Clear();
 	vars.LifeVirusDefeated.Clear();
+	vars.MMBW3_N1Prelim3 = 0;
+	vars.MMBN3_N1Prelim3 = 0;
+	vars.MMBW3_ToraJobDone = 0;
+	vars.MMB3_Rank10 = 0;
 }
