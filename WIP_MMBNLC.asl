@@ -76,6 +76,7 @@ state("MMBN_LC1")
 	short MMBN3_Tally : 0x29EE840, 0xB8, 0x104;
 	short MMBN3_ToraJobsFinished : 0x29EE840, 0xB8, 0x69C;
 	byte MMBN3_Rank10OnScreen : 0x29F0938;
+	byte MMBN3_CompletedSplit : 0x29FA938, 0x60;
 }
 
 state("MMBN_LC2") 
@@ -322,7 +323,6 @@ startup
 	settings.Add("3LazyRNG", false, "Lazy RNG Hexidecimal");
 	settings.CurrentDefaultParent = "BN3W";
 
-	// V2/V3 of enemies, or Alpha, Beta and Omega???
 	settings.Add("BN3WMainSplits", true, "Main Splits");
 	settings.CurrentDefaultParent = "BN3WMainSplits";
 	settings.Add("3N1Prelim1", true, "N1 Prelim 1");
@@ -332,20 +332,20 @@ startup
 	settings.Add("3Wind", true, "Wind *");
 	settings.Add("3N1Prelim3", true, "N1 Prelim 3");
 	settings.Add("3BubbleMan", true, "BubbleMan");
+	settings.Add("3MetalManAlpha", true, "MetalMan Alpha / V2");
 	settings.Add("3DesertMan", true, "DesertMan");
 	settings.Add("3ToraJobs", true, "Tora Jobs");
 	settings.Add("3PlantMan", true, "PlantMan");
 	settings.Add("3FiresStarted", true, "Fires Started - SciLab Train Stairs End Convo");
 	settings.Add("3FlamMan", true, "FlamMan");
 	settings.Add("3Rank10", true, "Rank 10");
-	settings.Add("3DrillManBeta", true, "DrillMan Beta / V3");
+	settings.Add("3DrillMan", true, "DrillMan");
 	settings.Add("3BubbleManAlpha", true, "BubbleMan Alpha V2");
 	settings.Add("3Completion", true, "Completion");
 	settings.CurrentDefaultParent = "BN3W";
 
 	settings.Add("BN3WOBosses", false, "Optional Bosses");
 	settings.CurrentDefaultParent = "BN3WOBosses";
-
 	settings.Add("3FlashManAlpha", true, "FlashMan Alpha / V2");
 	settings.Add("3FlashManBeta", true, "FlashMan Beta / V3");
 	settings.Add("3FlashManOmega", true, "FlashMan Omega / SP");
@@ -363,8 +363,8 @@ startup
 	settings.Add("3FlamManAlpha", true, "FlamMan Alpha / V2");
 	settings.Add("3FlamManBeta", true, "FlamMan Beta / V3");
 	settings.Add("3FlamManOmega", true, "FlamMan Omega / SP");
-	settings.Add("3DrillMan", true, "DrillMan");
 	settings.Add("3DrillManAlpha", true, "DrillMan Alpha / V2");
+	settings.Add("3DrillManBeta", true, "DrillMan Beta / V3");
 	settings.Add("3DrillManOmega", true, "DrillMan Omega / SP");
 	settings.Add("3Alpha", true, "Alpha");
 	settings.Add("3AlphaOmega", true, "Alpha Omega");
@@ -377,7 +377,6 @@ startup
 	settings.Add("3ProtoManBeta", true, "ProtoMan Beta / V3");
 	settings.Add("3ProtoManOmega", true, "ProtoMan Omega / SP");
 	settings.Add("3MetalMan", true, "MetalMan");
-	settings.Add("3MetalManAlpha", true, "MetalMan Alpha / V2");
 	settings.Add("3MetalManBeta", true, "MetalMan Beta / V3");
 	settings.Add("3MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("3Punk", true, "Punk");
@@ -431,6 +430,7 @@ startup
 	settings.Add("4Wind", true, "Wind *");
 	settings.Add("4N1Prelim3", true, "N1 Prelim 3");
 	settings.Add("4BubbleMan", true, "BubbleMan");
+	settings.Add("4MetalManAlpha", true, "Metal Man Alpha / V2");
 	settings.Add("4DesertMan", true, "DesertMan");
 	settings.Add("4ToraJobs", true, "Tora Jobs");
 	settings.Add("4PlantMan", true, "PlantMan");
@@ -444,22 +444,67 @@ startup
 
 	settings.Add("BN3BOBosses", false, "Optional Bosses");
 	settings.CurrentDefaultParent = "BN3BOBosses";
+	settings.Add("4FlashManAlpha", true, "FlashMan Alpha / V2");
+	settings.Add("4FlashManBeta", true, "FlashMan Beta / V3");
+	settings.Add("4FlashManOmega", true, "FlashMan Omega / SP");
+	settings.Add("4BeastManAlpha", true, "BeastMan Alpha / V2");
+	settings.Add("4BeastManBeta", true, "BeastMan Beta / V3");
+	settings.Add("4BeastManOmega", true, "BeastMan Omega / SP");
+	settings.Add("4BubbleManBeta", true, "BubbleMan Beta / V3");
+	settings.Add("4BubbleManOmega", true, "BubbleMan Omega / SP");
+	settings.Add("4DesertManAlpha", true, "DesertMan Alpha / V2");
+	settings.Add("4DesertManBeta", true, "DesertMan Beta / V3");
+	settings.Add("4DesertManOmega", true, "DesertMan Omega / SP");
+	settings.Add("4PlantManAlpha", true, "PlantMan Alpha / V2");
+	settings.Add("4PlantManBeta", true, "PlantMan Beta / V3");
+	settings.Add("4PlantManOmega", true, "PlantMan Omega / SP");
+	settings.Add("4FlamManAlpha", true, "FlamMan Alpha / V2");
+	settings.Add("4FlamManBeta", true, "FlamMan Beta / V3");
+	settings.Add("4FlamManOmega", true, "FlamMan Omega / SP");
+	settings.Add("4DrillManAlpha", true, "DrillMan Alpha / V2");
+	settings.Add("4DrillManBeta", true, "DrillMan Beta / V3");
+	settings.Add("4DrillManOmega", true, "DrillMan Omega / SP");
 	settings.Add("4Alpha", true, "Alpha");
 	settings.Add("4AlphaOmega", true, "Alpha Omega");
 	settings.Add("4GutsMan", true, "GutsMan");
 	settings.Add("4GutsManAlpha", true, "GutsMan Alpha / V2");
+	settings.Add("4GutsManBeta", true, "GutsMan Beta / V3");
+	settings.Add("4GutsManOmega", true, "GutsMan Omega / SP");
 	settings.Add("4ProtoMan", true, "ProtoMan");
+	settings.Add("4ProtoManAlpha", true, "ProtoMan Alpha / V2");
+	settings.Add("4ProtoManBeta", true, "ProtoMan Beta / V3");
+	settings.Add("4ProtoManOmega", true, "ProtoMan Omega / SP");
 	settings.Add("4MetalMan", true, "MetalMan");
-	settings.Add("4MetalManAlpha", true, "MetalMan Alpha / V2");
 	settings.Add("4MetalManBeta", true, "MetalMan Beta / V3");
 	settings.Add("4MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("4Punk", true, "Punk");
+	settings.Add("4PunkAlpha", true, "Punk Alpha / V2");
+	settings.Add("4PunkBeta", true, "Punk Beta / V3");
+	settings.Add("4PunkOmega", true, "Punk Omega / SP");
 	settings.Add("4KingMan", true, "KingMan");
+	settings.Add("4KingManAlpha", true, "KingMan Alpha / V2");
+	settings.Add("4KingManBeta", true, "KingMan Beta / V3");
+	settings.Add("4KingManOmega", true, "KingMan Omega / SP");
 	settings.Add("4MistMan", true, "MistMan");
+	settings.Add("4MistManAlpha", true, "MistMan Alpha / V2");
+	settings.Add("4MistManBeta", true, "MistMan Beta / V3");
+	settings.Add("4MistManOmega", true, "MistMan Omega / SP");
 	settings.Add("4BowlMan", true, "BowlMan");
+	settings.Add("4BowlManAlpha", true, "BowlMan Alpha / V2");
+	settings.Add("4BowlManBeta", true, "BowlMan Beta / V3");
+	settings.Add("4BowlManOmega", true, "BowlMan Omega / SP");
 	settings.Add("4DarkMan", true, "DarkMan");
+	settings.Add("4DarkManAlpha", true, "DarkMan Alpha / V2");
+	settings.Add("4DarkManBeta", true, "DarkMan Beta / V3");
+	settings.Add("4DarkManOmega", true, "DarkMan Omega / SP");
 	settings.Add("4JapanMan", true, "JapanMan");
+	settings.Add("4JapanManAlpha", true, "JapanMan Alpha / V2");
+	settings.Add("4JapanManBeta", true, "JapanMan Beta / V3");
+	settings.Add("4JapanManOmega", true, "JapanMan Omega / SP");
 	settings.Add("4Serenade", true, "Serenade");
+	settings.Add("4SerenadeAlpha", true, "Serenade Alpha / V2");
+	settings.Add("4SerenadeBeta", true, "Serenade Beta / V3");
+	settings.Add("4SerenadeOmega", true, "Serenade Alpha / SP");
 	settings.Add("4Bass", true, "Bass");
 	settings.Add("4BassGS", true, "Bass GS");
 	settings.Add("4BassOmega", true, "Bass Omega");
@@ -491,16 +536,11 @@ init
 {
 	vars.BossEncounter = new List<string>();
 	vars.BossDefeated = new List<string>();
-	vars.WWWBaseEntered = new List<string>();
+	vars.BN1WWWBaseEntered = new List<string>();
 	vars.LifeVirusDefeated = new List<string>();
-	vars.BN3BorW = "";
-	vars.LC1GC = "";
-	vars.LC2Version = "";
-	vars.LC2GC = "";
-	vars.MMBN3W_N1Prelim3 = 0;
-	vars.MMBN3B_N1Prelim3 = 0;
-	vars.MMBW3_ToraJobDone = 0;
-	vars.MMB3_Rank10 = 0;
+	vars.MMBN3_N1Prelim3 = 0;
+	vars.MMBN3_ToraJobDone = 0;
+	vars.MMBN3_Rank10 = 0;
 }
 
 start
@@ -532,7 +572,6 @@ update
 	{
 		case "MMBN_LC1":
 		{
-			vars.LC1GC = current.LC1_GameChoice;
 			// BN1 = 0, BN2 = 2, BN3W = 3, BN3B = 4
 			switch ( (byte) current.LC1_GameChoice ) 
 			{
@@ -604,7 +643,7 @@ update
 						}
 					if(current.LC1_AreaID == 5 && current.LC1_SubAreaID == 0)
 						{
-							vars.WWWBaseEntered.Add("Entered");
+							vars.BN1WWWBaseEntered.Add("Entered");
 						}
 					break;
 					}
@@ -678,13 +717,13 @@ update
 					if(settings["4LazyRNG"] && current.MMBN3_LazyRNG != old.MMBN3_LazyRNG) print("BN3B_LazyRNG: " + current.MMBN3_LazyRNG.ToString("X"));
 					if(old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
 						{
-							vars.MMBW3_ToraJobDone = 1;
-							print("ToraJobDone: " + vars.MMBW3_ToraJobDone.ToString());
+							vars.MMBN3_ToraJobDone = 1;
+							print("ToraJobDone: " + vars.MMBN3_ToraJobDone.ToString());
 						}
-					if(vars.MMBW3_ToraJobDone == 1 && old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256)
+					if(vars.MMBN3_ToraJobDone == 1 && old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256)
 						{
-							vars.MMBW3_ToraJobDone = 2;
-							print("ToraJobDone: " + vars.MMBW3_ToraJobDone.ToString());
+							vars.MMBN3_ToraJobDone = 2;
+							print("ToraJobDone: " + vars.MMBN3_ToraJobDone.ToString());
 						}
 					
 					if(current.MMBN3_ToraJobsFinished != old.MMBN3_ToraJobsFinished) print("MMBN3_ToraJobsFinished: " + current.MMBN3_ToraJobsFinished.ToString());
@@ -756,7 +795,7 @@ update
 						|| settings[current.LC1_GameChoice.ToString() + "JapanManAlpha"] && current.LC1_ENo1 == 233
 						|| settings[current.LC1_GameChoice.ToString() + "JapanManBeta"] && current.LC1_ENo1 == 234
 						|| settings[current.LC1_GameChoice.ToString() + "JapanManOmega"] && current.LC1_ENo1 == 235
-						|| settings[current.LC1_GameChoice.ToString() + "dSerenade"] && current.LC1_ENo1 == 236
+						|| settings[current.LC1_GameChoice.ToString() + "Serenade"] && current.LC1_ENo1 == 236
 						|| settings[current.LC1_GameChoice.ToString() + "SerenadeAlpha"] && current.LC1_ENo1 == 237
 						|| settings[current.LC1_GameChoice.ToString() + "SerenadeBeta"] && current.LC1_ENo1 == 238
 						|| settings[current.LC1_GameChoice.ToString() + "SerenadeOmega"] && current.LC1_ENo1 == 239
@@ -785,37 +824,36 @@ update
 			{
 				if(current.LC2_GameChoice != old.LC2_GameChoice) print("LC2_GameChoice: " + current.LC2_GameChoice.ToString());
 				// BN4RS - 5/BM - 6,  BN5TP - 7/TC - 8, BN6CG - 9/CF - 10
-				vars.LC2GC = current.LC2_GameChoice;
-				switch ( (byte) vars.LC2GC )
+				switch ( (byte) current.LC2_GameChoice )
 				{
 				case 5:
 					{ 
-						vars.LC2Version = "BN4RS";
+						
 					}
 					break;
 				case 6:
 					{
-						vars.LC2Version = "BN4BM";
+						
 					}
 					break;
 				case 7:
 					{
-						vars.LC2Version = "BN5TM";
+						
 					}
 					break; 
 				case 8:
 					{
-						vars.LC2Version = "BN5TC";
+						
 					}
 					break;
 				case 9:
 					{
-						vars.LC2Version = "BN6CG";
+						
 					}
 					break;
 				case 10:
 					{
-						vars.LC2Version = "BN6CF";
+						
 					}
 					break;
 				}
@@ -845,14 +883,14 @@ split
 		}
 
 	if (current.LC1_GameChoice == 0 && settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
-		&& vars.WWWBaseEntered.Contains("Entered") 
+		&& vars.BN1WWWBaseEntered.Contains("Entered") 
 		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 		{
 			return true;
 		}
 
 	if (current.LC1_GameChoice == 0 && settings["BN1NoLifeVirusSplit"] 
-		&& vars.WWWBaseEntered.Contains("Entered") 
+		&& vars.BN1WWWBaseEntered.Contains("Entered") 
 		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
 		{
 			return true;
@@ -931,6 +969,18 @@ split
 			return true;
 		}
 
+	// Resetting Lists/vars returning to Main Menu
+	if (old.LC1_GameSelected == 0 && current.LC1_GameSelected == 1)
+	{
+		vars.BossEncounter.Clear();
+		vars.BossDefeated.Clear();
+		vars.BN1WWWBaseEntered.Clear();
+		vars.LifeVirusDefeated.Clear();
+		vars.MMBN3_N1Prelim3 = 0;
+		vars.MMBN3_ToraJobDone = 0;
+		vars.MMBN3_Rank10 = 0;
+	}
+
 	// Mega Man Battle Network 3 White & Blue
 	if ((vars.BossEncounter.Contains("3" + current.LC1_ENo1.ToString()) || vars.BossEncounter.Contains("4" + current.LC1_ENo1.ToString()))
 		&& (!vars.BossDefeated.Contains("3" + current.LC1_ENo1.ToString()) || !vars.BossDefeated.Contains("4" + current.LC1_ENo1.ToString()))
@@ -940,60 +990,41 @@ split
 			return true;
 		}
 
-	if (current.LC1_GameChoice == 3 
-		&& (
-			(settings["3N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
-			|| (settings["3N1Prelim2"] & old.LC1_Progress == 21 && current.LC1_Progress == 22)
-			|| (settings["3Wind"] && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
-			|| (settings["3FiresStarted"] && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
+	if (current.LC1_GameChoice >= 3 && (((settings["3N1Prelim1"] || settings["4N1Prelim1"]) && old.LC1_Progress == 2 && current.LC1_Progress == 3)
+			|| ((settings["3N1Prelim2"] || (settings["4N1Prelim2"])) && old.LC1_Progress == 21 && current.LC1_Progress == 22)
+			|| ((settings["3Wind"] || settings["4Wind"]) && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
+			|| ((settings["3FiresStarted"] || settings["4FiresStarted"]) && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
 		{
 			return true;
 		}
 	
-	if (current.LC1_GameChoice == 3 && vars.MMBN3W_N1Prelim3 != 1
-		&& (settings["3N1Prelim3"] && current.LC1_Progress == 34
-				&& old.MMBN3_N1Prelim3Win == 0 && current.MMBN3_N1Prelim3Win == 3))
+	if (current.LC1_GameChoice >= 3 && vars.MMBN3_N1Prelim3 != 1
+		&& ((settings["3N1Prelim3"] || settings["4N1Prelim3"]) 
+		&& current.LC1_Progress == 34 && old.MMBN3_N1Prelim3Win == 0 && current.MMBN3_N1Prelim3Win == 3))
 				{
 					return true;
-					vars.MMBN3W_N1Prelim3 = 1;
+					vars.MMBN3_N1Prelim3 = 1;
 				}
 
-	// if ((old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
-	// 	&& (old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256))
-	// 	{
-	// 		return true;
-	// 	}
-
-	if (current.LC1_GameChoice == 3 && vars.MMBW3_ToraJobDone == 2
-		&& settings["3ToraJobs"] && current.LC1_Progress == 66)
+	if (current.LC1_GameChoice >= 3 && vars.MMBN3_ToraJobDone == 2
+		&& (settings["3ToraJobs"] || settings["4ToraJobs"]) && current.LC1_Progress == 66)
 		{
-			vars.MMBW3_ToraJobDone = 3;
+			vars.MMBN3_ToraJobDone = 3;
 			return true;
 		}
 
-	if (current.LC1_GameChoice == 3 && current.MMBN3_Rank10OnScreen == 10
-		&& vars.MMB3_Rank10 == 0 && settings["3Rank10"] && current.LC1_Progress == 98)
+	if (current.LC1_GameChoice >= 3 && current.MMBN3_Rank10OnScreen == 10
+		&& vars.MMB3_Rank10 == 0 && (settings["3Rank10"] || settings["4Rank10"]) && current.LC1_Progress == 98)
 		{
 			vars.MMB3_Rank10 = 1;
 			return true;
 		}
-
-	if (current.LC1_GameChoice == 4 
-		&& ((settings["4N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3)
-		|| (settings["4N1Prelim2"] & old.LC1_Progress == 21 && current.LC1_Progress == 22)))
+	
+	if (current.LC1_GameChoice >= 3 && current.LC1_Progress == 122
+		&& old.MMBN3_CompletedSplit == 0 && current.MMBN3_CompletedSplit == 1)
 		{
 			return true;
 		}
-
-	// if ((current.LC1_GameChoice == 3 || current.LC1_GameChoice == 4)
-	// 	&& ((settings["3N1Prelim1"] || settings["4N1Prelim1"]) 
-	// 	&& old.LC1_Progress == 2 && current.LC1_Progress == 3)
-	// 	|| ((settings["3N1Prelim2"] || settings["4N1Prelim2"] 
-	// 	&& old.LC1_Progress == 21 && current.LC1_Progress == 22)))
-	// {
-	// 	return true;
-	// }
-		// || settings[current.LC1_GameChoice.ToString() + "N1Prelim1"] && old.LC1_Progress == 2 && current.LC1_Progress == 3
 }
 
 onSplit
@@ -1005,10 +1036,9 @@ onReset
 {
 	vars.BossEncounter.Clear();
 	vars.BossDefeated.Clear();
-	vars.WWWBaseEntered.Clear();
+	vars.BN1WWWBaseEntered.Clear();
 	vars.LifeVirusDefeated.Clear();
-	vars.MMBW3_N1Prelim3 = 0;
 	vars.MMBN3_N1Prelim3 = 0;
-	vars.MMBW3_ToraJobDone = 0;
-	vars.MMB3_Rank10 = 0;
+	vars.MMBN3_ToraJobDone = 0;
+	vars.MMBN3_Rank10 = 0;
 }
