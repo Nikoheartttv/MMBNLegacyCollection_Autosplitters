@@ -41,12 +41,12 @@ state("MMBN_LC1")
 	byte LC1_BattlePaused : 0x29EE840, 0xB8, 0x9;
 	int LC1_Zenny : 0x29EE840, 0xB8, 0x74;
 	// int KeyItems : 0x29EE840, 0xB8, 0xC0;
-	
 	int LC1_ENo1 : 0x29EE840, 0x50, 0x0;
 	int LC1_ENo2 : 0x29EE840, 0x50, 0x4;
 	int LC1_ENo3 : 0x29EE840, 0x50, 0x8;
 
 	// --- Mega Man Battle Network 1 Pointers
+	short MMBN1_HP : 0x29F3148, 0x20;
 	short MMBN1_ENoHP1 : 0x29F21F8, 0x60;
 	short MMBN1_ENoHP2 : 0x29F21F8, 0x110;
 	short MMBN1_ENoHP3 : 0x29F21F8, 0x1C0;
@@ -57,6 +57,7 @@ state("MMBN_LC1")
 	short MMBN1_FinalSplit : 0x29F21F8, 0x4;
 
 	// --- Mega Man Battle Network 2 Pointers
+	short MMBN2_HP : 0x29F5988, 0x24;
 	short MMBN2_ENoHP1 : 0x29F21F8, 0x1A4;
 	short MMBN2_ENoHP2 : 0x29F21F8, 0x264;
 	short MMBN2_ENoHP3 : 0x29F21F8, 0x264;
@@ -137,8 +138,6 @@ state("MMBN_LC2")
 
 startup
 {
-	// Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
-    
 	settings.Add("Vol1", true, "Legacy Collection 1");
 	settings.CurrentDefaultParent = "Vol1";
 
@@ -510,25 +509,25 @@ startup
 	settings.Add("4BassOmega", true, "Bass Omega");
 	settings.CurrentDefaultParent = null;
 
-	settings.Add("Vol2", true, "Legacy Collection 2");
+	settings.Add("Vol2", true, "(TEMPORARY PLACEHOLDER) Legacy Collection 2");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN4RS", true, "Mega Man Battle Network 4 Red Sun");
+	settings.Add("BN4RS", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 4 Red Sun");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN4BM", true, "Mega Man Battle Network 4 Blue Moon");
+	settings.Add("BN4BM", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 4 Blue Moon");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN5TP", true, "Mega Man Battle Network 5 Team Protocol");
+	settings.Add("BN5TP", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 5 Team Protocol");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN5TC", true, "Mega Man Battle Network 5 Team Colonel");
+	settings.Add("BN5TC", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 5 Team Colonel");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN6CG", true, "Mega Man Battle Network 5 Cybeast Gregar");
+	settings.Add("BN6CG", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 5 Cybeast Gregar");
 	settings.CurrentDefaultParent = "Vol2";
 
-	settings.Add("BN6CF", true, "Mega Man Battle Network 5 Cybeast Falzar");
+	settings.Add("BN6CF", true, "(TEMPORARY PLACEHOLDER) Mega Man Battle Network 5 Cybeast Falzar");
 	settings.CurrentDefaultParent = "Vol2";
 }
 
@@ -545,14 +544,14 @@ init
 
 start
 {
-	switch(game.ProcessName)
+	switch(game.ProcessName.ToLower())
 	{
-		case "MMBN_LC1":
+		case "mmbn_lc1":
 		{
 			return old.LC1_GameState == 28 && current.LC1_GameState != 28;
 			break;
 		}
-		case "MMBN_LC2":
+		case "mmbn_lc2":
 		{
 			return (old.MMBN5_GameState == 28 && current.MMBN5_GameState != 28 ||
 					old.MMBN6_GameState == 28 && current.MMBN6_GameState != 28);
@@ -568,10 +567,21 @@ onStart
 
 update
 {
-	switch(game.ProcessName)
+	switch(game.ProcessName.ToLower())
 	{
-		case "MMBN_LC1":
+		case "mmbn_lc1":
 		{
+			// Resetting Lists/vars returning to Main Menu
+			if (old.LC1_GameSelected == 0 && current.LC1_GameSelected == 1)
+			{
+				vars.BossEncounter.Clear();
+				vars.BossDefeated.Clear();
+				vars.BN1WWWBaseEntered.Clear();
+				vars.LifeVirusDefeated.Clear();
+				vars.MMBN3_N1Prelim3 = 0;
+				vars.MMBN3_ToraJobDone = 0;
+				vars.MMBN3_Rank10 = 0;
+			}
 			// BN1 = 0, BN2 = 2, BN3W = 3, BN3B = 4
 			switch ( (byte) current.LC1_GameChoice ) 
 			{
@@ -583,7 +593,7 @@ update
 					if(settings["BN1LabMemoLog"] && current.MMBN1_LabMemo != old.MMBN1_LabMemo) print("MMBN1_LabMemo: " + current.MMBN1_LabMemo.ToString());
 					if(settings["BN1YuriMemoLog"] && current.MMBN1_YuriMemo != old.MMBN1_YuriMemo) print("MMBN1_YuriMemo: " + current.MMBN1_YuriMemo.ToString());
 					if(settings["BN1PaMemoLog"] && current.MMBN1_PaMemo != old.MMBN1_PaMemo) print("MMBN1_PaMemo: " + current.MMBN1_PaMemo.ToString());
-					// - Main Splits
+					// - Boss Splits
 					if((old.LC1_ENo1 != current.LC1_ENo1) && 
 						(settings["0Floshell"] && current.LC1_ENo1 == 24
 						|| settings["0ColdBear"] && current.LC1_ENo1 == 41 && current.LC1_ENo2 == 42
@@ -641,6 +651,7 @@ update
 						{
 							vars.LifeVirusDefeated.Add("Defeated");
 						}
+					// - WWW Base Entered List Entry
 					if(current.LC1_AreaID == 5 && current.LC1_SubAreaID == 0)
 						{
 							vars.BN1WWWBaseEntered.Add("Entered");
@@ -650,7 +661,7 @@ update
 				case 2:
 					{
 					// --- Mega Man Battle Network 2
-					// Bass Deluxe ID might be incorrect, haven't tested
+					// - Boss Splits (Bass Deluxe ID might be incorrect, haven't tested)
 					if((old.LC1_ENo1 != current.LC1_ENo1) && 
 						(settings["2AirMan"] && current.LC1_ENo1 == 128
 						|| settings["2AirManV2"] && current.LC1_ENo1 == 129
@@ -711,23 +722,13 @@ update
 					}
 				case 3: case 4:
 				{
+					// --- Mega Man Battle Network 3 White & Blue
+					// - Logging
 					if(settings["3MainRNG"] && current.MMBN3_MainRNG != old.MMBN3_MainRNG) print("BN3W_MainRNG: " + current.MMBN3_MainRNG.ToString("X"));
 					if(settings["3LazyRNG"] && current.MMBN3_LazyRNG != old.MMBN3_LazyRNG) print("BN3W_LazyRNG: " + current.MMBN3_LazyRNG.ToString("X"));
 					if(settings["4MainRNG"] && current.MMBN3_MainRNG != old.MMBN3_MainRNG) print("BN3B_MainRNG: " + current.MMBN3_MainRNG.ToString("X"));
 					if(settings["4LazyRNG"] && current.MMBN3_LazyRNG != old.MMBN3_LazyRNG) print("BN3B_LazyRNG: " + current.MMBN3_LazyRNG.ToString("X"));
-					if(old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
-						{
-							vars.MMBN3_ToraJobDone = 1;
-							print("ToraJobDone: " + vars.MMBN3_ToraJobDone.ToString());
-						}
-					if(vars.MMBN3_ToraJobDone == 1 && old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256)
-						{
-							vars.MMBN3_ToraJobDone = 2;
-							print("ToraJobDone: " + vars.MMBN3_ToraJobDone.ToString());
-						}
-					
-					if(current.MMBN3_ToraJobsFinished != old.MMBN3_ToraJobsFinished) print("MMBN3_ToraJobsFinished: " + current.MMBN3_ToraJobsFinished.ToString());
-					// Complete all of BN3B and BN3W associated bosses
+					// Boss Splits
 					if ((old.LC1_ENo1 != current.LC1_ENo1) && 
 						(settings[current.LC1_GameChoice.ToString() + "FlashMan"] && current.LC1_ENo1 == 168
 						|| settings[current.LC1_GameChoice.ToString() + "FlashManAlpha"] && current.LC1_ENo1 == 169
@@ -805,9 +806,20 @@ update
 						{
 							vars.BossEncounter.Add(current.LC1_GameChoice.ToString() + current.LC1_ENo1.ToString());
 						}
+					// - Tally for Tora Jobs
+					if(old.MMBN3_Tally == 0 && current.MMBN3_Tally == 256)
+						{
+							vars.MMBN3_ToraJobDone = 1;
+						}
+					// - Tora Jobs Split Setup
+					if(vars.MMBN3_ToraJobDone == 1 && old.MMBN3_ToraJobsFinished == 0 && current.MMBN3_ToraJobsFinished == 256)
+						{
+							vars.MMBN3_ToraJobDone = 2;
+						}
 					break;
 				}
 			}
+			// --- Global Logging
 			if(settings["Vol1GameState"] && current.LC1_GameState != old.LC1_GameState) print("LC1_GameState: " + current.LC1_GameState.ToString());
 			if(settings["Vol1AreaID"] && current.LC1_AreaID != old.LC1_AreaID) print("LC1_AreaID: " + current.LC1_AreaID.ToString());
 			if(settings["Vol1SubAreaID"] && current.LC1_SubAreaID != old.LC1_SubAreaID) print("LC1_SubAreaID: " + current.LC1_SubAreaID.ToString());
@@ -817,47 +829,34 @@ update
 			if(settings["Vol1GameChoice"] && current.LC1_GameChoice != old.LC1_GameChoice) print("LC1_GameChoice: " + current.LC1_GameChoice.ToString());
 			if(settings["Vol1GameSelected"] && current.LC1_GameSelected != old.LC1_GameSelected) print("LC1_GameSelected: " + current.LC1_GameSelected.ToString());
 			if(settings["Vol1Progress"] && current.LC1_Progress != old.LC1_Progress) print("LC1_Progress: " + current.LC1_Progress.ToString());
-			
 			break;
 		}
-		case "MMBN_LC2":
+		case "mmbn_lc2":
 			{
 				if(current.LC2_GameChoice != old.LC2_GameChoice) print("LC2_GameChoice: " + current.LC2_GameChoice.ToString());
 				// BN4RS - 5/BM - 6,  BN5TP - 7/TC - 8, BN6CG - 9/CF - 10
 				switch ( (byte) current.LC2_GameChoice )
 				{
 				case 5:
-					{ 
-						
-					}
+					{}
 					break;
 				case 6:
-					{
-						
-					}
+					{}
 					break;
 				case 7:
-					{
-						
-					}
+					{}
 					break; 
 				case 8:
-					{
-						
-					}
+					{}
 					break;
 				case 9:
-					{
-						
-					}
+					{}
 					break;
 				case 10:
-					{
-						
-					}
+					{}
 					break;
 				}
-			 	// print("test");
+			 	
 			}
 			break;
 		}
@@ -866,165 +865,172 @@ update
 split
 {
 	// --- Mega Man Battle Network 1
-	if (vars.BossEncounter.Contains("0" + current.LC1_ENo1.ToString()) 
-		&& !vars.BossDefeated.Contains("0" + current.LC1_ENo1.ToString())
-		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
-		{
-			vars.BossDefeated.Add("0" + current.LC1_ENo1.ToString());
-			return true;
-		}
-	
-	if (current.LC1_GameChoice == 0 && current.MMBN1_HigsMemo == 1 && current.MMBN1_LabMemo == 1
-		&& current.MMBN1_YuriMemo == 1 & current.MMBN1_PaMemo == 1
-		&& old.LC1_AreaID == 2 && old.LC1_SubAreaID == 5
-		&& current.LC1_AreaID == 137 && current.LC1_SubAreaID == 0)
-		{
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 0 && settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
-		&& vars.BN1WWWBaseEntered.Contains("Entered") 
-		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
-		{
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 0 && settings["BN1NoLifeVirusSplit"] 
-		&& vars.BN1WWWBaseEntered.Contains("Entered") 
-		&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
-		{
-			return true;
-		}
-
-	// --- Mega Man Battle Network 2
-	// current.LC1_AreaID is not 133 for all other bosses as to not split in Boss Rushes
-	if (current.LC1_AreaID != 133 && vars.BossEncounter.Contains("2" + current.LC1_ENo1.ToString()) 
-		&& !vars.BossDefeated.Contains("2" + current.LC1_ENo1.ToString())
-		&& old.LC1_GameState == 12 && current.LC1_GameState == 4)
-		{
-			vars.BossDefeated.Add("2" + current.LC1_ENo1.ToString());
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && 
-		(settings["2ZLicensePassed"] && old.LC1_Progress == 3 && current.LC1_Progress == 4
-		|| settings["2BLicensePassed"] && old.MMBN2_BLicense == 0 && current.MMBN2_BLicense == 1
-		|| settings["2ALicensePrelims"] && old.LC1_Progress == 18 && current.LC1_Progress == 19 
-		|| settings["2ALicenseExam"] && old.LC1_Progress == 19 && current.LC1_Progress == 20
-		|| settings["2EscapedYumland"] & old.LC1_Progress == 25 && current.LC1_Progress == 26
-		|| settings["2HeatData"] & old.MMBN2_HeatData == 0 && current.MMBN2_HeatData == 1))
-		{
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2BossRush1"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 3
-		 && old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 134)
-		{
-			print("Boss Rush 1 Done");
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2BossRush2"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 4
-		 && old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 146)
-		{
-			print("Boss Rush 2 Done");
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2Bass"] && current.LC1_ENo1 == 182
-		&& old.LC1_GameState == 12 && current.LC1_GameState != 12 )
-		{
-			print("Bass Defeated");
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2Completed"] && current.LC1_ENo1 == 149
-		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
-		{
-			print("Gospel Defeated");
-			vars.BossDefeated.Add("2GospelDead");
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2Completed"] 
-		&& vars.BossDefeated.Contains("2GospelDead")
-		&& current.LC1_AreaID == 2 && current.LC1_SubAreaID == 4
-		&& old.MMBN2_FinalSplit == 0 && current.MMBN2_FinalSplit == 50)
-		{
-			print("Completed");
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2GospelSplit"] 
-		&& current.LC1_ENo1 == 149 && old.LC1_GameState == 12 
-		&& current.LC1_GameState != 12)
-		{
-			print("Alt Gospel Split");
-			return true;
-		}
-
-	if (current.LC1_GameChoice == 2 && settings["2Doghouse"] && 
-		(old.LC1_AreaID == 140 && old.LC1_SubAreaID == 2)
-		&& (current.LC1_AreaID == 0 && current.LC1_SubAreaID == 0))
-		{
-			return true;
-		}
-
-	// Resetting Lists/vars returning to Main Menu
-	if (old.LC1_GameSelected == 0 && current.LC1_GameSelected == 1)
+	switch(game.ProcessName.ToLower())
 	{
-		vars.BossEncounter.Clear();
-		vars.BossDefeated.Clear();
-		vars.BN1WWWBaseEntered.Clear();
-		vars.LifeVirusDefeated.Clear();
-		vars.MMBN3_N1Prelim3 = 0;
-		vars.MMBN3_ToraJobDone = 0;
-		vars.MMBN3_Rank10 = 0;
-	}
-
-	// Mega Man Battle Network 3 White & Blue
-	if ((vars.BossEncounter.Contains("3" + current.LC1_ENo1.ToString()) || vars.BossEncounter.Contains("4" + current.LC1_ENo1.ToString()))
-		&& (!vars.BossDefeated.Contains("3" + current.LC1_ENo1.ToString()) || !vars.BossDefeated.Contains("4" + current.LC1_ENo1.ToString()))
-		&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
+		case "mmbn_lc1":
 		{
-			vars.BossDefeated.Add(current.LC1_GameChoice.ToString() + current.LC1_ENo1.ToString());
-			return true;
-		}
-
-	if (current.LC1_GameChoice >= 3 && (((settings["3N1Prelim1"] || settings["4N1Prelim1"]) && old.LC1_Progress == 2 && current.LC1_Progress == 3)
-			|| ((settings["3N1Prelim2"] || (settings["4N1Prelim2"])) && old.LC1_Progress == 21 && current.LC1_Progress == 22)
-			|| ((settings["3Wind"] || settings["4Wind"]) && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
-			|| ((settings["3FiresStarted"] || settings["4FiresStarted"]) && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
-		{
-			return true;
-		}
-	
-	if (current.LC1_GameChoice >= 3 && vars.MMBN3_N1Prelim3 != 1
-		&& ((settings["3N1Prelim3"] || settings["4N1Prelim3"]) 
-		&& current.LC1_Progress == 34 && old.MMBN3_N1Prelim3Win == 0 && current.MMBN3_N1Prelim3Win == 3))
+			switch ( (byte) current.LC1_GameChoice )
+			{
+				case 0:
 				{
-					return true;
-					vars.MMBN3_N1Prelim3 = 1;
+					if (current.LC1_GameChoice == 0 && vars.BossEncounter.Contains("0" + current.LC1_ENo1.ToString()) 
+						&& !vars.BossDefeated.Contains("0" + current.LC1_ENo1.ToString())
+						&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
+						{
+							vars.BossDefeated.Add("0" + current.LC1_ENo1.ToString());
+							return true;
+						}
+			
+					if (current.LC1_GameChoice == 0 && current.MMBN1_HigsMemo == 1 && current.MMBN1_LabMemo == 1
+						&& current.MMBN1_YuriMemo == 1 & current.MMBN1_PaMemo == 1
+						&& old.LC1_AreaID == 2 && old.LC1_SubAreaID == 5
+						&& current.LC1_AreaID == 137 && current.LC1_SubAreaID == 0)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 0 && settings["BN1LifeVirusSplit"] && vars.LifeVirusDefeated.Contains("Defeated") 
+						&& vars.BN1WWWBaseEntered.Contains("Entered") 
+						&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 0 && settings["BN1NoLifeVirusSplit"] 
+						&& vars.BN1WWWBaseEntered.Contains("Entered") 
+						&& old.MMBN1_ResultScreen == 1 && current.MMBN1_ResultScreen == 15)
+						{
+							return true;
+						}
+					break;
+					}
+				case 2:
+				{
+					// --- Mega Man Battle Network 2
+					// current.LC1_AreaID is not 133 for all other bosses as to not split in Boss Rushes
+					if (current.LC1_AreaID != 133 && vars.BossEncounter.Contains("2" + current.LC1_ENo1.ToString()) 
+						&& !vars.BossDefeated.Contains("2" + current.LC1_ENo1.ToString())
+						&& old.LC1_GameState == 12 && current.LC1_GameState == 4)
+						{
+							vars.BossDefeated.Add("2" + current.LC1_ENo1.ToString());
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && 
+						(settings["2ZLicensePassed"] && old.LC1_Progress == 3 && current.LC1_Progress == 4
+						|| settings["2BLicensePassed"] && old.MMBN2_BLicense == 0 && current.MMBN2_BLicense == 1
+						|| settings["2ALicensePrelims"] && old.LC1_Progress == 18 && current.LC1_Progress == 19 
+						|| settings["2ALicenseExam"] && old.LC1_Progress == 19 && current.LC1_Progress == 20
+						|| settings["2EscapedYumland"] & old.LC1_Progress == 25 && current.LC1_Progress == 26
+						|| settings["2HeatData"] & old.MMBN2_HeatData == 0 && current.MMBN2_HeatData == 1))
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2BossRush1"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 3
+						&& old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 134)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2BossRush2"] && current.LC1_AreaID == 133 && current.LC1_SubAreaID == 4
+						&& old.LC1_GameState == 12 && current.LC1_GameState == 4 && current.LC1_ENo1 == 146)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2Bass"] && current.LC1_ENo1 == 182
+						&& old.LC1_GameState == 12 && current.LC1_GameState != 12 )
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2Completed"] && current.LC1_ENo1 == 149
+						&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
+						{
+							vars.BossDefeated.Add("2GospelDead");
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2Completed"] 
+						&& vars.BossDefeated.Contains("2GospelDead")
+						&& current.LC1_AreaID == 2 && current.LC1_SubAreaID == 4
+						&& old.MMBN2_FinalSplit == 0 && current.MMBN2_FinalSplit == 50)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2GospelSplit"] 
+						&& current.LC1_ENo1 == 149 && old.LC1_GameState == 12 
+						&& current.LC1_GameState != 12)
+						{
+							return true;
+						}
+
+					if (current.LC1_GameChoice == 2 && settings["2Doghouse"] && 
+						(old.LC1_AreaID == 140 && old.LC1_SubAreaID == 2)
+						&& (current.LC1_AreaID == 0 && current.LC1_SubAreaID == 0))
+						{
+							return true;
+						}
+					break;
+					}
+				case 3: case 4:
+				{
+					// Mega Man Battle Network 3 White & Blue
+					if ((vars.BossEncounter.Contains("3" + current.LC1_ENo1.ToString()) || vars.BossEncounter.Contains("4" + current.LC1_ENo1.ToString()))
+						&& (!vars.BossDefeated.Contains("3" + current.LC1_ENo1.ToString()) || !vars.BossDefeated.Contains("4" + current.LC1_ENo1.ToString()))
+						&& old.LC1_GameState == 12 && current.LC1_GameState != 12)
+						{
+							vars.BossDefeated.Add(current.LC1_GameChoice.ToString() + current.LC1_ENo1.ToString());
+							return true;
+						}
+
+					if (current.LC1_GameChoice >= 3 && (((settings["3N1Prelim1"] || settings["4N1Prelim1"]) && old.LC1_Progress == 2 && current.LC1_Progress == 3)
+							|| ((settings["3N1Prelim2"] || (settings["4N1Prelim2"])) && old.LC1_Progress == 21 && current.LC1_Progress == 22)
+							|| ((settings["3Wind"] || settings["4Wind"]) && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
+							|| ((settings["3FiresStarted"] || settings["4FiresStarted"]) && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
+						{
+							return true;
+						}
+					
+					if (current.LC1_GameChoice >= 3 && vars.MMBN3_N1Prelim3 != 1
+						&& ((settings["3N1Prelim3"] || settings["4N1Prelim3"]) 
+						&& current.LC1_Progress == 34 && old.MMBN3_N1Prelim3Win == 0 && current.MMBN3_N1Prelim3Win == 3))
+								{
+									return true;
+									vars.MMBN3_N1Prelim3 = 1;
+								}
+
+					if (current.LC1_GameChoice >= 3 && vars.MMBN3_ToraJobDone == 2
+						&& (settings["3ToraJobs"] || settings["4ToraJobs"]) && current.LC1_Progress == 66)
+						{
+							vars.MMBN3_ToraJobDone = 3;
+							return true;
+						}
+
+					if (current.LC1_GameChoice >= 3 && current.MMBN3_Rank10OnScreen == 10
+						&& vars.MMB3_Rank10 == 0 && (settings["3Rank10"] || settings["4Rank10"]) && current.LC1_Progress == 98)
+						{
+							vars.MMB3_Rank10 = 1;
+							return true;
+						}
+					
+					if (current.LC1_GameChoice >= 3 && current.LC1_Progress == 122
+						&& old.MMBN3_CompletedSplit == 0 && current.MMBN3_CompletedSplit == 1)
+						{
+							return true;
+						}
+					break;
 				}
+			}
+		break;
+		}
+		case "mmbn_lc2":
+		{
 
-	if (current.LC1_GameChoice >= 3 && vars.MMBN3_ToraJobDone == 2
-		&& (settings["3ToraJobs"] || settings["4ToraJobs"]) && current.LC1_Progress == 66)
-		{
-			vars.MMBN3_ToraJobDone = 3;
-			return true;
+		break;
 		}
-
-	if (current.LC1_GameChoice >= 3 && current.MMBN3_Rank10OnScreen == 10
-		&& vars.MMB3_Rank10 == 0 && (settings["3Rank10"] || settings["4Rank10"]) && current.LC1_Progress == 98)
-		{
-			vars.MMB3_Rank10 = 1;
-			return true;
-		}
-	
-	if (current.LC1_GameChoice >= 3 && current.LC1_Progress == 122
-		&& old.MMBN3_CompletedSplit == 0 && current.MMBN3_CompletedSplit == 1)
-		{
-			return true;
-		}
+	}
 }
 
 onSplit
