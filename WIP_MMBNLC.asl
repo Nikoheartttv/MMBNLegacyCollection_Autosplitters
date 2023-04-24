@@ -72,6 +72,8 @@ state("MMBN_LC1")
 	int MMBN3_MainRNG : 0x16485EAA, 0x897;
 	int MMBN3_LazyRNG : 0x16485EAA, 0x89B;
 	byte MMBN3_WindStarChip : 0x29EE840, 0xB8, 0xE13;
+	byte MMBN3_IceballMChip : 0x29EE840, 0xB8, 0x5C4;
+	byte MMBN3_YoyoGChip : 0x29EE840, 0xB8, 0x8DE;
 	byte MMBN3_N1Prelim3Win : 0x29FA938, 0x94;
 	short MMBN3_Tally : 0x29EE840, 0xB8, 0x104;
 	short MMBN3_ToraJobsFinished : 0x29EE840, 0xB8, 0x69C;
@@ -342,6 +344,12 @@ startup
 	settings.Add("3Completion", true, "Completion");
 	settings.CurrentDefaultParent = "BN3W";
 
+	settings.Add("BN3WAltSplits", false, "Alternative Splits");
+	settings.CurrentDefaultParent = "BN3WAltSplits";
+	settings.Add("3IceballM", false, "Iceball M Chip Get");
+	settings.Add("3YoyoG", false, "Yo-Yo G Chip Get");
+	settings.CurrentDefaultParent = "BN3W";
+
 	settings.Add("BN3WOBosses", false, "Optional Bosses");
 	settings.CurrentDefaultParent = "BN3WOBosses";
 	settings.Add("3FlashManAlpha", true, "FlashMan Alpha / V2");
@@ -438,6 +446,12 @@ startup
 	settings.Add("4DrillMan", true, "FlamMan");
 	settings.Add("4BubbleManV2", true, "BubbleMan V2");
 	settings.Add("4Completion", true, "Completion");
+	settings.CurrentDefaultParent = "BN3B";
+
+	settings.Add("BN3BAltSplits", false, "Alternative Splits");
+	settings.CurrentDefaultParent = "BN3BAltSplits";
+	settings.Add("4IceballM", false, "Iceball M Chip Get");
+	settings.Add("4YoyoG", false, "Yo-Yo G Chip Get");
 	settings.CurrentDefaultParent = "BN3B";
 
 	settings.Add("BN3BOBosses", false, "Optional Bosses");
@@ -987,6 +1001,8 @@ split
 					if (current.LC1_GameChoice >= 3 && (((settings["3N1Prelim1"] || settings["4N1Prelim1"]) && old.LC1_Progress == 2 && current.LC1_Progress == 3)
 							|| ((settings["3N1Prelim2"] || (settings["4N1Prelim2"])) && old.LC1_Progress == 21 && current.LC1_Progress == 22)
 							|| ((settings["3Wind"] || settings["4Wind"]) && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
+							|| ((settings["3IceballM"] || settings["4IceballM"]) && old.MMBN3_IceballMChip == 0 && current.MMBN3_WindStarChip == 1)
+							|| ((settings["3YoyoG"] || settings["4YoyoG"]) && old.MMBN3_YoyoGChip == 0 && current.MMBN3_YoyoGChip == 1)
 							|| ((settings["3FiresStarted"] || settings["4FiresStarted"]) && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
 						{
 							return true;
