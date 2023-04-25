@@ -1,7 +1,5 @@
 // Work in Progress Autosplitter by Nikoheart
 // 0.4 - BN1/BN2 Mostly Done, BN5/6 Pointers found
-// requires just-ero's asl-help in LiveSplit/Components
-// https://github.com/just-ero/asl-help/raw/main/lib/asl-help
 // Thanks NMarko for help with Area/SubArea ID
 
 // 23.04.22
@@ -66,12 +64,12 @@ state("MMBN_LC1")
 
 	// --- Mega Man Battle Network 3 White/Blue Pointers
 	short MMBN3_HP : 0x29F9748, 0x34;
-	byte MMBN3_ENoHP1 : 0x29F9748, 0x108;
-	byte MMBN3_ENoHP2 : 0x29F9748, 0x1DC;
-	byte MMBN3_ENoHP3 : 0x29F9748, 0x2B0;
+	short MMBN3_ENoHP1 : 0x29F9748, 0x108;
+	short MMBN3_ENoHP2 : 0x29F9748, 0x1DC;
+	short MMBN3_ENoHP3 : 0x29F9748, 0x2B0;
 	int MMBN3_MainRNG : 0x16485EAA, 0x897;
 	int MMBN3_LazyRNG : 0x16485EAA, 0x89B;
-	byte MMBN3_WindStarChip : 0x29EE840, 0xB8, 0xE13;
+	ushort MMBN3_WindStarChip : 0x29EE840, 0xB8, 0xE13;
 	byte MMBN3_IceballMChip : 0x29EE840, 0xB8, 0x5C4;
 	byte MMBN3_YoyoGChip : 0x29EE840, 0xB8, 0x8DE;
 	byte MMBN3_N1Prelim3Win : 0x29FA938, 0x94;
@@ -332,7 +330,7 @@ startup
 	settings.Add("3Wind", true, "Wind *");
 	settings.Add("3N1Prelim3", true, "N1 Prelim 3");
 	settings.Add("3BubbleMan", true, "BubbleMan");
-	settings.Add("3MetalManAlpha", true, "MetalMan Alpha / V2");
+	settings.Add("3BeachGauntlet", true, "Beach Gauntlet");
 	settings.Add("3DesertMan", true, "DesertMan");
 	settings.Add("3ToraJobs", true, "Tora Jobs");
 	settings.Add("3PlantMan", true, "PlantMan");
@@ -383,6 +381,7 @@ startup
 	settings.Add("3ProtoManBeta", true, "ProtoMan Beta / V3");
 	settings.Add("3ProtoManOmega", true, "ProtoMan Omega / SP");
 	settings.Add("3MetalMan", true, "MetalMan");
+	settings.Add("3MetalManAlpha", true, "MetalMan Alpha / V2");
 	settings.Add("3MetalManBeta", true, "MetalMan Beta / V3");
 	settings.Add("3MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("3Punk", true, "Punk");
@@ -436,7 +435,7 @@ startup
 	settings.Add("4Wind", true, "Wind *");
 	settings.Add("4N1Prelim3", true, "N1 Prelim 3");
 	settings.Add("4BubbleMan", true, "BubbleMan");
-	settings.Add("4MetalManAlpha", true, "Metal Man Alpha / V2");
+	settings.Add("4BeachGauntlet", true, "Beach Gauntlet");
 	settings.Add("4DesertMan", true, "DesertMan");
 	settings.Add("4ToraJobs", true, "Tora Jobs");
 	settings.Add("4PlantMan", true, "PlantMan");
@@ -487,6 +486,7 @@ startup
 	settings.Add("4ProtoManBeta", true, "ProtoMan Beta / V3");
 	settings.Add("4ProtoManOmega", true, "ProtoMan Omega / SP");
 	settings.Add("4MetalMan", true, "MetalMan");
+	settings.Add("4MetalManAlpha", true, "Metal Man Alpha / V2");
 	settings.Add("4MetalManBeta", true, "MetalMan Beta / V3");
 	settings.Add("4MetalManOmega", true, "MetalMan Omega / SP");
 	settings.Add("4Punk", true, "Punk");
@@ -842,6 +842,7 @@ update
 			if(settings["Vol1GameChoice"] && current.LC1_GameChoice != old.LC1_GameChoice) print("LC1_GameChoice: " + current.LC1_GameChoice.ToString());
 			if(settings["Vol1GameSelected"] && current.LC1_GameSelected != old.LC1_GameSelected) print("LC1_GameSelected: " + current.LC1_GameSelected.ToString());
 			if(settings["Vol1Progress"] && current.LC1_Progress != old.LC1_Progress) print("LC1_Progress: " + current.LC1_Progress.ToString());
+			if(current.MMBN2_HP != old.MMBN2_HP) print("MMBN2_HP: " + current.MMBN2_HP.ToString());
 			break;
 		}
 		case "mmbn_lc2":
@@ -1001,6 +1002,7 @@ split
 					if (current.LC1_GameChoice >= 3 && (((settings["3N1Prelim1"] || settings["4N1Prelim1"]) && old.LC1_Progress == 2 && current.LC1_Progress == 3)
 							|| ((settings["3N1Prelim2"] || (settings["4N1Prelim2"])) && old.LC1_Progress == 21 && current.LC1_Progress == 22)
 							|| ((settings["3Wind"] || settings["4Wind"]) && old.MMBN3_WindStarChip == 65280 && current.MMBN3_WindStarChip == 65281)
+							|| ((settings["3BeachGauntlet"] || settings["4BeachGauntlet"]) && old.LC1_Progress == 49 && current.LC1_Progress == 50)
 							|| ((settings["3IceballM"] || settings["4IceballM"]) && old.MMBN3_IceballMChip == 0 && current.MMBN3_WindStarChip == 1)
 							|| ((settings["3YoyoG"] || settings["4YoyoG"]) && old.MMBN3_YoyoGChip == 0 && current.MMBN3_YoyoGChip == 1)
 							|| ((settings["3FiresStarted"] || settings["4FiresStarted"]) && old.LC1_Progress == 84 && current.LC1_Progress == 85)))
