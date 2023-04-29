@@ -3,11 +3,8 @@
 ## Repo Contains
 
 WIP Autosplitter
-- BN1 only working atm
+- BN1, 2 and 3 working up to Any% completions
 - Starts on New Game (or Continue) selected, splits on Boss Kills (can be assigned in autosplitter settings)
-- Final split choice in autosplitter settings (for WWW1 skip? if it still works in LC) or after killing LifeVirus
-- Testing Split line bracketed out to potentially remove need for settings choice for final split
-- Requires Just-Ero's UnityASL component: https://github.com/just-ero/asl-help/blob/main/Components/UnityASL.bin
 
 ## Resources
 
