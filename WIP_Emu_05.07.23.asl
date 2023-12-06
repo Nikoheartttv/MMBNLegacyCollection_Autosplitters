@@ -82,8 +82,6 @@ init
 
 	var mms = modules.First().ModuleMemorySize;
 	print("ModuleMemorySize: " + "0x" + mms.ToString("X"));
-
-	// var mainModule = modules.First();
 	
 	var mms2 = modules.First(x => x.ModuleName == "mgba.dll").BaseAddress;
 	print(mainModule + " - Base Address: " + mms2.ToString("X"));
@@ -143,8 +141,7 @@ init
 	// }
 }
 
-// update
-// {
-// 	var dptr = new DeepPointer("mgba.dll", 0xF9448, 0x10, 0x28, 0x0);
-// 	// print(dptr.ToString());
-// }
+update
+{
+	switch ()
+}
